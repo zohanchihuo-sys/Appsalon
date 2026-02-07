@@ -3,56 +3,58 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manuel Salón Pro + WhatsApp</title>
+    <title>Manuel Salón Pro</title>
     <style>
-        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; --wa: #25d366; }
-        body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: #eee; margin: 0; padding-bottom: 30px; }
+        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --wa: #25d366; }
+        body { font-family: sans-serif; background: var(--bg); color: #eee; margin: 0; padding-bottom: 30px; }
         
+        /* Navegación Superior */
         header { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--oro); position: sticky; top: 0; z-index: 1000; }
         .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 10px; background: #000; border-bottom: 1px solid #222; }
         .tab-btn { background: #1a1a1a; color: #888; border: 1px solid #333; padding: 12px 2px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .tab-btn.active { background: var(--oro); color: #000; border-color: var(--oro); }
 
-        .content { display: none; padding: 15px; animation: fadeIn 0.3s; }
+        /* Secciones */
+        .content { display: none; padding: 15px; }
         .content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         
-        .card { background: var(--card); border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #252525; }
-        h2 { color: var(--oro); font-size: 0.85rem; text-align: center; margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        .card { background: var(--card); border-radius: 15px; padding: 15px; margin-bottom: 15px; border: 1px solid #252525; }
+        h2 { color: var(--oro); font-size: 0.85rem; text-align: center; margin: 0 0 10px 0; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
 
+        /* Calendario */
         .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 15px 0; }
-        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 8px; border: 1px solid #333; }
+        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 8px; border: 1px solid #333; cursor: pointer; }
         .has-c { border: 1px solid var(--oro); color: var(--oro); font-weight: bold; }
         .sel-d { background: var(--oro) !important; color: #000 !important; }
 
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; }
+        /* Inputs y Botones */
+        input, select { width: 100%; padding: 12px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; }
         
-        .item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid var(--oro); position: relative; }
-        .badge { background: #333; color: var(--oro); padding: 3px 7px; border-radius: 5px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 5px; }
+        .item { background: #1a1a1a; padding: 12px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid var(--oro); position: relative; }
+        .badge { background: #333; color: var(--oro); padding: 3px 7px; border-radius: 5px; font-size: 10px; font-weight: bold; display: inline-block; margin-bottom: 5px; }
         
-        .btn-wa { background: var(--wa); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; }
-        .btn-edit { color: var(--a); background: none; border: none; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 15px; }
-        .btn-del { color: var(--r); background: none; border: none; font-size: 11px; font-weight: bold; cursor: pointer; }
+        /* Botón WhatsApp */
+        .btn-wa { background: var(--wa); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; margin-top: 10px; }
+        .btn-del { color: var(--r); background: none; border: none; font-size: 11px; font-weight: bold; cursor: pointer; margin-left: 10px; }
     </style>
 </head>
 <body>
 
-    <header><div style="color:var(--oro); font-weight:bold; letter-spacing:3px;">MANUEL SALÓN</div></header>
+    <header><div style="color:var(--oro); font-weight:bold; letter-spacing:2px;">MANUEL SALÓN</div></header>
 
     <div class="tabs">
         <button class="tab-btn active" onclick="openTab(event, 'sec-agenda')">📅 CITAS</button>
         <button class="tab-btn" onclick="openTab(event, 'sec-ventas')">💰 CAJA</button>
         <button class="tab-btn" onclick="openTab(event, 'sec-cls')">👥 CLIENTES</button>
-        <button class="tab-btn" onclick="openTab(event, 'sec-config')">⚙️ AJUSTES</button>
+        <button class="tab-btn" onclick="openTab(event, 'sec-config')">⚙️ STAFF</button>
     </div>
 
     <div id="sec-agenda" class="content active">
         <div class="card">
-            <h2 id="t-cita">NUEVA CITA</h2>
-            <input type="hidden" id="edit-id-cita">
+            <h2>AGENDAR CITA</h2>
             <input type="text" id="a-nom" placeholder="Nombre del Cliente">
-            <input type="tel" id="a-tel" placeholder="WhatsApp (opcional)">
+            <input type="tel" id="a-tel" placeholder="WhatsApp (Ej: 52123...)">
             <select id="a-barb" class="staff-select"></select>
             <div style="display:flex; gap:5px;"><input type="date" id="a-fec"><input type="time" id="a-hor"></div>
             <button class="btn-m" onclick="agendar()">GUARDAR CITA</button>
@@ -64,62 +66,61 @@
     <div id="sec-ventas" class="content">
         <div class="card" style="text-align:center">
             <small>INGRESOS HOY</small>
-            <h1 id="tH" style="color:var(--v); margin:10px 0; font-size:2.5rem;">$0</h1>
+            <h1 id="tH" style="color:var(--v); margin:10px 0; font-size:2rem;">$0</h1>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
                 <div style="background:#000; padding:10px; border-radius:10px; border:1px solid #333;"><small id="nP1"></small><br><b id="sB1" style="color:var(--oro)">$0</b></div>
                 <div style="background:#000; padding:10px; border-radius:10px; border:1px solid #333;"><small id="nP2"></small><br><b id="sB2" style="color:var(--oro)">$0</b></div>
             </div>
         </div>
         <div class="card">
-            <h2>COBRAR SERVICIO</h2>
+            <h2>REGISTRAR VENTA</h2>
             <select id="v-barb" class="staff-select"></select>
             <input type="number" id="v-mon" placeholder="Monto $">
-            <button class="btn-m" onclick="vender()">COBRAR AHORA</button>
+            <button class="btn-m" onclick="vender()">COBRAR</button>
         </div>
     </div>
 
     <div id="sec-cls" class="content">
         <div class="card">
-            <h2 id="t-cl">REGISTRAR CLIENTE</h2>
-            <input type="hidden" id="edit-id-cl">
-            <input type="text" id="c-nom" placeholder="Nombre completo">
-            <input type="tel" id="c-tel" placeholder="Número WhatsApp">
+            <h2>NUEVO CLIENTE</h2>
+            <input type="text" id="c-nom" placeholder="Nombre">
+            <input type="tel" id="c-tel" placeholder="WhatsApp">
             <button class="btn-m" onclick="guardarCl()">GUARDAR FICHA</button>
         </div>
-        <input type="text" id="bus" placeholder="🔍 Buscar cliente..." onkeyup="render()">
+        <input type="text" id="bus" placeholder="🔍 Buscar..." onkeyup="render()">
         <div id="listaClientes"></div>
     </div>
 
     <div id="sec-config" class="content">
         <div class="card">
             <h2>PERSONAL</h2>
-            <input type="text" id="p1-n" placeholder="Nombre Peluquero 1">
-            <input type="text" id="p2-n" placeholder="Nombre Peluquero 2">
-            <button class="btn-m" onclick="saveConf()">ACTUALIZAR STAFF</button>
+            <input type="text" id="p1-n" placeholder="Peluquero 1">
+            <input type="text" id="p2-n" placeholder="Peluquero 2">
+            <button class="btn-m" onclick="saveConf()">ACTUALIZAR NOMBRES</button>
         </div>
-        <button class="btn-m" style="background:var(--a); color:white;" onclick="exportar()">💾 RESPALDO DATOS</button>
     </div>
 
 <script>
-    let db_v = JSON.parse(localStorage.getItem('M6_V')) || [];
-    let db_c = JSON.parse(localStorage.getItem('M6_C')) || [];
-    let db_l = JSON.parse(localStorage.getItem('M6_L')) || [];
-    let db_s = JSON.parse(localStorage.getItem('M6_S')) || {p1:"Peluquero 1", p2:"Peluquero 2"};
+    // Iniciar datos
+    let db_v = JSON.parse(localStorage.getItem('M7_V')) || [];
+    let db_c = JSON.parse(localStorage.getItem('M7_C')) || [];
+    let db_l = JSON.parse(localStorage.getItem('M7_L')) || [];
+    let db_s = JSON.parse(localStorage.getItem('M7_S')) || {p1:"Peluquero 1", p2:"Peluquero 2"};
     let fSel = new Date().toISOString().split('T')[0];
 
     function openTab(e, n) {
         document.querySelectorAll('.content').forEach(c => c.classList.remove('active'));
         document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
         document.getElementById(n).classList.add('active');
-        e.currentTarget.classList.add('active');
+        if(e) e.currentTarget.classList.add('active');
         render();
     }
 
     function save() {
-        localStorage.setItem('M6_V', JSON.stringify(db_v));
-        localStorage.setItem('M6_C', JSON.stringify(db_c));
-        localStorage.setItem('M6_L', JSON.stringify(db_l));
-        localStorage.setItem('M6_S', JSON.stringify(db_s));
+        localStorage.setItem('M7_V', JSON.stringify(db_v));
+        localStorage.setItem('M7_C', JSON.stringify(db_c));
+        localStorage.setItem('M7_L', JSON.stringify(db_l));
+        localStorage.setItem('M7_S', JSON.stringify(db_s));
     }
 
     function saveConf() {
@@ -130,30 +131,39 @@
 
     function agendar() {
         const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value, t=document.getElementById('a-tel').value;
-        if(!n || !f || !h) return alert("Faltan datos");
-        db_c.push({n,f,h,b,t,id:Date.now()});
-        save(); render(); alert("Cita Agendada");
+        if(n && f && h) {
+            db_c.push({n,f,h,b,t,id:Date.now()});
+            save(); render(); alert("Cita Agendada");
+            document.getElementById('a-nom').value = "";
+        } else { alert("Faltan datos"); }
     }
 
     function vender() {
         const m=parseFloat(document.getElementById('v-mon').value), b=document.getElementById('v-barb').value;
-        if(m) { db_v.push({m,b,f:new Date().toLocaleDateString()}); save(); render(); alert("Cobro ok"); }
+        if(m) {
+            db_v.push({m, b, f:new Date().toLocaleDateString()});
+            save(); render(); alert("Cobro registrado");
+            document.getElementById('v-mon').value = "";
+        }
     }
 
     function guardarCl() {
         const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value;
-        if(n) { db_l.push({n,t,h:[],id:Date.now()}); save(); render(); alert("Cliente guardado"); }
+        if(n) { db_l.push({n,t,id:Date.now()}); save(); render(); alert("Cliente guardado"); }
     }
 
     function render() {
+        // Nombres staff
         document.getElementById('nP1').innerText=db_s.p1; document.getElementById('nP2').innerText=db_s.p2;
-        const s=document.querySelectorAll('.staff-select');
-        s.forEach(x=>x.innerHTML=`<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`);
+        const selects=document.querySelectorAll('.staff-select');
+        selects.forEach(x=>x.innerHTML=`<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`);
 
+        // Caja
         const hoy=new Date().toLocaleDateString(); let t=0, b1=0, b2=0;
         db_v.forEach(v=>{ if(v.f===hoy){ t+=v.m; if(v.b===db_s.p1) b1+=v.m; else b2+=v.m; } });
         document.getElementById('tH').innerText="$"+t; document.getElementById('sB1').innerText="$"+b1; document.getElementById('sB2').innerText="$"+b2;
 
+        // Calendario
         const cal=document.getElementById('calendario'); cal.innerHTML="";
         const d=new Date(); const ult=new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
         for(let i=1; i<=ult; i++){
@@ -162,19 +172,21 @@
             cal.innerHTML+=`<div class="cal-d ${has} ${sel}" onclick="fSel='${f}';render()">${i}</div>`;
         }
 
+        // Lista Citas
         const lc=document.getElementById('listaCitas'); lc.innerHTML="";
         db_c.filter(x=>x.f===fSel).sort((a,b)=>a.h.localeCompare(b.h)).forEach(c=>{
-            let btnWA = c.t ? `<a href="https://wa.me/${c.t}" target="_blank" class="btn-wa">📱 WhatsApp</a>` : '';
-            lc.innerHTML+=`<div class="item"><span class="badge">${c.h} | ${c.b}</span><br><b>${c.n}</b><br>${btnWA} <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render()}">CANCELAR</button></div>`;
+            let wa = c.t ? `<a href="https://wa.me/${c.t}" target="_blank" class="btn-wa">WhatsApp</a>` : '';
+            lc.innerHTML+=`<div class="item"><span class="badge">${c.h} | ${c.b}</span><br><b>${c.n}</b><br>${wa} <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render()}">X</button></div>`;
         });
 
+        // Lista Clientes
         const lcl=document.getElementById('listaClientes'), bus=document.getElementById('bus').value.toLowerCase(); lcl.innerHTML="";
         db_l.filter(x=>x.n.toLowerCase().includes(bus)).forEach(c=>{
-            let btnWA = c.t ? `<a href="https://wa.me/${c.t}" target="_blank" class="btn-wa">📱 WhatsApp</a>` : '';
-            lcl.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small><br>${btnWA} <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_l=db_l.filter(x=>x.id!==${c.id});save();render()}">ELIMINAR</button></div>`;
+            let wa = c.t ? `<a href="https://wa.me/${c.t}" target="_blank" class="btn-wa">WhatsApp</a>` : '';
+            lcl.innerHTML+=`<div class="item"><b>${c.n}</b><br>${wa} <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_l=db_l.filter(x=>x.id!==${c.id});save();render()}">X</button></div>`;
         });
     }
-    function exportar(){ const b=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="backup_salon.json"; a.click(); }
+
     render();
 </script>
 </body>
