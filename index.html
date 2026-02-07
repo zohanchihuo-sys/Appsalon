@@ -1,197 +1,45 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manuel Salón Pro - Control Total</title>
-    <script src="https://unpkg.com/html5-qrcode"></script>
-    <style>
-        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #eee; margin: 0; padding: 10px; }
-        
-        /* BOTONES PRINCIPALES SIEMPRE VISIBLES */
-        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; position: sticky; top: 0; z-index: 1000; background: var(--bg); padding-bottom: 10px; }
-        .tab-btn { background: #222; color: #fff; border: 1px solid #444; padding: 10px 2px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
-        .tab-btn.active { background: var(--oro); color: #000; border-color: var(--oro); }
+function copiarResumenCaja(){
+  const fecha = $("cajaFiltroFecha").value || todayISO();
+  const movs = state.movimientos.filter(m=>m.fecha===fecha);
 
-        .content { display: none; padding-top: 10px; }
-        .content.active { display: block; }
-        
-        .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #252525; }
-        h2 { color: var(--oro); font-size: 1rem; text-align: center; margin-top: 0; }
+  const ing = movs.filter(m=>m.tipo==="ingreso").reduce((a,b)=>a+Number(b.monto||0),0);
+  const gas = movs.filter(m=>m.tipo==="gasto").reduce((a,b)=>a+Number(b.monto||0),0);
+  const net = ing - gas;
 
-        /* CALENDARIO */
-        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 10px 0; }
-        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 4px; border: 1px solid #333; }
-        .has-c { border: 1px solid var(--oro); color: var(--oro); }
-        .sel-d { background: var(--oro) !important; color: #000 !important; }
+  const text =
+`📌 Caja del día: ${fecha}
+✅ Ingresos: ${money(ing)}
+❌ Gastos: ${money(gas)}
+💰 Neto: ${money(net)}`;
 
-        /* INPUTS Y BOTONES */
-        input, select { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; cursor: pointer; margin-top: 5px; }
-        .btn-fast { background: #333; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; font-size: 11px; font-weight: bold; }
+  // ✅ Intento 1: clipboard moderno
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text)
+      .then(()=>alert("Resumen copiado ✅ (pegar en WhatsApp)"))
+      .catch(()=>fallbackCopy(text));
+  } else {
+    // ✅ Fallback para Android / no https
+    fallbackCopy(text);
+  }
+}
 
-        .item { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--oro); }
-        .badge { background: #333; color: var(--oro); padding: 2px 5px; border-radius: 4px; font-size: 10px; }
-    </style>
-</head>
-<body>
+function fallbackCopy(text){
+  // Truco universal: textarea temporal
+  const ta = document.createElement("textarea");
+  ta.value = text;
+  ta.style.position = "fixed";
+  ta.style.left = "-9999px";
+  ta.style.top = "-9999px";
+  document.body.appendChild(ta);
+  ta.focus();
+  ta.select();
 
-    <div class="tabs">
-        <button class="tab-btn active" onclick="openTab(event, 'sec-agenda')">📅 CITAS</button>
-        <button class="tab-btn" onclick="openTab(event, 'sec-ventas')">💰 CAJA</button>
-        <button class="tab-btn" onclick="openTab(event, 'sec-cls')">👥 CLIENTES</button>
-        <button class="tab-btn" onclick="openTab(event, 'sec-config')">⚙️ AJUSTES</button>
-    </div>
-
-    <div id="sec-agenda" class="content active">
-        <div class="card">
-            <h2>+ AGENDAR CITA</h2>
-            <input type="text" id="a-nom" placeholder="Cliente">
-            <select id="a-barb" class="staff-select"></select>
-            <div style="display:flex; gap:5px;"><input type="date" id="a-fec"><input type="time" id="a-hor"></div>
-            <button class="btn-m" onclick="agendar()">GUARDAR CITA</button>
-        </div>
-        <div class="cal" id="calendario"></div>
-        <div id="listaCitas"></div>
-    </div>
-
-    <div id="sec-ventas" class="content">
-        <div class="card" style="text-align:center">
-            <small>INGRESOS HOY</small>
-            <h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div style="background:#000; padding:5px; border-radius:5px;"><small id="nP1"></small><br><b id="sB1">$0</b></div>
-                <div style="background:#000; padding:5px; border-radius:5px;"><small id="nP2"></small><br><b id="sB2">$0</b></div>
-            </div>
-        </div>
-        <div class="card">
-            <h2>COBRAR</h2>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:10px;">
-                <button class="btn-fast" onclick="rápido('cab')">CABA.</button>
-                <button class="btn-fast" onclick="rápido('dam')">DAMA</button>
-                <button class="btn-fast" onclick="rápido('nin')">NIÑO</button>
-                <button class="btn-fast" onclick="rápido('pla')">PLANCHADO</button>
-            </div>
-            <select id="v-barb" class="staff-select"></select>
-            <input type="number" id="v-mon" placeholder="Monto $">
-            <button class="btn-m" onclick="vender()">REGISTRAR VENTA</button>
-        </div>
-    </div>
-
-    <div id="sec-cls" class="content">
-        <div class="card">
-            <h2>NUEVO CLIENTE / TINTES</h2>
-            <input type="text" id="c-nom" placeholder="Nombre">
-            <input type="tel" id="c-tel" placeholder="WhatsApp">
-            <button class="btn-m" onclick="guardarCl()">GUARDAR</button>
-        </div>
-        <input type="text" id="bus" placeholder="🔍 Buscar cliente..." onkeyup="render()">
-        <div id="listaClientes"></div>
-    </div>
-
-    <div id="sec-config" class="content">
-        <div class="card">
-            <h2>PELUQUEROS</h2>
-            <input type="text" id="p1-n" placeholder="Nombre Peluquero 1">
-            <input type="text" id="p2-n" placeholder="Nombre Peluquero 2">
-            <button class="btn-m" onclick="saveStaff()">GUARDAR STAFF</button>
-        </div>
-        <div class="card">
-            <h2>PRECIOS</h2>
-            <small>Caballero:</small><input type="number" id="pr-cab">
-            <small>Dama:</small><input type="number" id="pr-dam">
-            <button class="btn-m" onclick="savePrecios()">GUARDAR PRECIOS</button>
-        </div>
-        <button class="btn-m" style="background:var(--a); color:#fff" onclick="exportar()">💾 RESPALDO TOTAL</button>
-    </div>
-
-<script>
-    let db_v = JSON.parse(localStorage.getItem('M_V')) || [];
-    let db_c = JSON.parse(localStorage.getItem('M_C')) || [];
-    let db_l = JSON.parse(localStorage.getItem('M_L')) || [];
-    let db_s = JSON.parse(localStorage.getItem('M_S')) || {p1:"Manuel", p2:"Socio"};
-    let db_p = JSON.parse(localStorage.getItem('M_P')) || {cab:150, dam:250, nin:100, pla:200};
-    let fechaSel = new Date().toISOString().split('T')[0];
-
-    function openTab(evt, tabName) {
-        let contents = document.getElementsByClassName("content");
-        for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
-        let buttons = document.getElementsByClassName("tab-btn");
-        for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
-        document.getElementById(tabName).classList.add("active");
-        evt.currentTarget.classList.add("active");
-        render();
-    }
-
-    function save() {
-        localStorage.setItem('M_V', JSON.stringify(db_v));
-        localStorage.setItem('M_C', JSON.stringify(db_c));
-        localStorage.setItem('M_L', JSON.stringify(db_l));
-        localStorage.setItem('M_S', JSON.stringify(db_s));
-        localStorage.setItem('M_P', JSON.stringify(db_p));
-    }
-
-    function saveStaff() { db_s.p1=document.getElementById('p1-n').value; db_s.p2=document.getElementById('p2-n').value; save(); render(); alert("Staff Guardado"); }
-    function savePrecios() { db_p.cab=document.getElementById('pr-cab').value; db_p.dam=document.getElementById('pr-dam').value; save(); alert("Precios Guardados"); }
-    function agendar() { 
-        const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value;
-        if(n&&f&&h){ db_c.push({n,f,h,b,id:Date.now()}); save(); render(); alert("Cita Agendada"); }
-    }
-    function rápido(t) { document.getElementById('v-mon').value = db_p[t]; }
-    function vender() {
-        const m=parseFloat(document.getElementById('v-mon').value), b=document.getElementById('v-barb').value;
-        if(m){ db_v.push({m,b,f:new Date().toLocaleDateString()}); save(); render(); alert("Venta OK"); }
-    }
-    function guardarCl() { 
-        const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value;
-        if(n){ db_l.push({n,t,h:[],id:Date.now()}); save(); render(); alert("Cliente Guardado"); }
-    }
-    function addTinte(id) { 
-        const t=prompt("Fórmula:"); if(t){ let i=db_l.findIndex(x=>x.id===id); db_l[i].h.unshift({f:new Date().toLocaleDateString(), t}); save(); render(); } 
-    }
-
-    function render() {
-        // Update Nombres
-        document.getElementById('nP1').innerText = db_s.p1; document.getElementById('nP2').innerText = db_s.p2;
-        document.getElementById('p1-n').value = db_s.p1; document.getElementById('p2-n').value = db_s.p2;
-        document.getElementById('pr-cab').value = db_p.cab; document.getElementById('pr-dam').value = db_p.dam;
-
-        // Selects
-        const selects = document.querySelectorAll('.staff-select');
-        selects.forEach(s => s.innerHTML = `<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`);
-
-        // Caja
-        const hoy = new Date().toLocaleDateString(); let t=0, b1=0, b2=0;
-        db_v.forEach(v => { if(v.f===hoy){ t+=v.m; if(v.b===db_s.p1) b1+=v.m; else b2+=v.m; } });
-        document.getElementById('tH').innerText = "$"+t; document.getElementById('sB1').innerText = "$"+b1; document.getElementById('sB2').innerText = "$"+b2;
-
-        // Cal
-        const cal = document.getElementById('calendario'); cal.innerHTML = "";
-        const d = new Date(); const ult = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
-        for(let i=1; i<=ult; i++){
-            let f = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-            let has = db_c.some(x=>x.f===f)?'has-c':''; let sel = f===fechaSel?'sel-d':'';
-            cal.innerHTML += `<div class="cal-d ${has} ${sel}" onclick="fechaSel='${f}';render()">${i}</div>`;
-        }
-
-        // List Citas
-        const lc = document.getElementById('listaCitas'); lc.innerHTML = "";
-        db_c.filter(x=>x.f===fechaSel).forEach(c => {
-            lc.innerHTML += `<div class="item"><span class="badge">${c.h} | ${c.b}</span><br><b>${c.n}</b><br><button onclick="if(confirm('Borrar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render()}" style="color:red;background:none;border:none;font-size:10px;">ELIMINAR</button></div>`;
-        });
-
-        // List Clientes
-        const lcl = document.getElementById('listaClientes'), b=document.getElementById('bus').value.toLowerCase(); lcl.innerHTML="";
-        db_l.filter(x=>x.n.toLowerCase().includes(b)).forEach(c => {
-            let h = c.h.map(x=>`<div style="font-size:10px;color:gray;">${x.f}: ${x.t}</div>`).join('');
-            lcl.innerHTML += `<div class="item"><b>${c.n}</b><br>${h}<button onclick="addTinte(${c.id})" style="background:var(--oro);border:none;border-radius:4px;font-size:10px;padding:4px;margin-top:5px;">+ TINTE</button></div>`;
-        });
-    }
-
-    function exportar(){ const blob = new Blob([JSON.stringify(localStorage)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "salon_backup.json"; a.click(); }
-
-    render();
-</script>
-</body>
-</html>
+  try{
+    const ok = document.execCommand("copy");
+    alert(ok ? "Resumen copiado ✅" : "No se pudo copiar. Te lo muestro para copiar manual:\n\n" + text);
+  }catch(e){
+    alert("No se pudo copiar. Copia manual:\n\n" + text);
+  }finally{
+    document.body.removeChild(ta);
+  }
+}
