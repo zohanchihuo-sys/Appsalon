@@ -3,18 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manuel Salón Pro</title>
+    <title>Manuel Salón Pro + WhatsApp</title>
     <style>
-        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; }
+        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; --wa: #25d366; }
         body { font-family: 'Segoe UI', Roboto, sans-serif; background: var(--bg); color: #eee; margin: 0; padding-bottom: 30px; }
         
-        /* HEADER Y TABS */
         header { background: #000; padding: 15px; text-align: center; border-bottom: 2px solid var(--oro); position: sticky; top: 0; z-index: 1000; }
         .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; padding: 10px; background: #000; border-bottom: 1px solid #222; }
         .tab-btn { background: #1a1a1a; color: #888; border: 1px solid #333; padding: 12px 2px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
         .tab-btn.active { background: var(--oro); color: #000; border-color: var(--oro); }
 
-        /* SECCIONES */
         .content { display: none; padding: 15px; animation: fadeIn 0.3s; }
         .content.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
@@ -22,25 +20,20 @@
         .card { background: var(--card); border-radius: 15px; padding: 18px; margin-bottom: 15px; border: 1px solid #252525; }
         h2 { color: var(--oro); font-size: 0.85rem; text-align: center; margin-top: 0; text-transform: uppercase; border-bottom: 1px solid #333; padding-bottom: 10px; }
 
-        /* CALENDARIO */
         .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin: 15px 0; }
-        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 8px; border: 1px solid #333; cursor: pointer; }
+        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 8px; border: 1px solid #333; }
         .has-c { border: 1px solid var(--oro); color: var(--oro); font-weight: bold; }
         .sel-d { background: var(--oro) !important; color: #000 !important; }
 
-        /* FORMULARIOS */
-        input, select, textarea { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; background: var(--oro); color: black; cursor: pointer; text-transform: uppercase; margin-top: 5px; }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 10px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 16px; border-radius: 12px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; }
         
-        .btn-s { background: #1a1a1a; color: var(--oro); border: 1px solid var(--oro); padding: 12px; border-radius: 8px; font-size: 10px; font-weight: bold; }
-
-        /* LISTAS */
         .item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 5px solid var(--oro); position: relative; }
         .badge { background: #333; color: var(--oro); padding: 3px 7px; border-radius: 5px; font-size: 11px; font-weight: bold; display: inline-block; margin-bottom: 5px; }
-        .formula-box { background: #000; padding: 8px; border-radius: 6px; margin-top: 8px; font-size: 12px; border-left: 2px solid var(--a); color: #ccc; }
         
-        .btn-del { color: var(--r); background: none; border: none; font-size: 12px; font-weight: bold; margin-top: 10px; }
-        .btn-edit { color: var(--a); background: none; border: none; font-size: 12px; font-weight: bold; margin-right: 15px; }
+        .btn-wa { background: var(--wa); color: white; border: none; padding: 8px 12px; border-radius: 8px; font-size: 11px; font-weight: bold; cursor: pointer; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px; }
+        .btn-edit { color: var(--a); background: none; border: none; font-size: 11px; font-weight: bold; cursor: pointer; margin-right: 15px; }
+        .btn-del { color: var(--r); background: none; border: none; font-size: 11px; font-weight: bold; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -59,6 +52,7 @@
             <h2 id="t-cita">NUEVA CITA</h2>
             <input type="hidden" id="edit-id-cita">
             <input type="text" id="a-nom" placeholder="Nombre del Cliente">
+            <input type="tel" id="a-tel" placeholder="WhatsApp (opcional)">
             <select id="a-barb" class="staff-select"></select>
             <div style="display:flex; gap:5px;"><input type="date" id="a-fec"><input type="time" id="a-hor"></div>
             <button class="btn-m" onclick="agendar()">GUARDAR CITA</button>
@@ -78,12 +72,6 @@
         </div>
         <div class="card">
             <h2>COBRAR SERVICIO</h2>
-            <div style="display:grid; grid-template-columns: 1fr 1fr; gap:8px; margin-bottom:10px;">
-                <button class="btn-s" onclick="setPr('cab')">CORTE CAB.</button>
-                <button class="btn-s" onclick="setPr('dam')">CORTE DAMA</button>
-                <button class="btn-s" onclick="setPr('nin')">CORTE NIÑO</button>
-                <button class="btn-s" onclick="setPr('pla')">PLANCHADO</button>
-            </div>
             <select id="v-barb" class="staff-select"></select>
             <input type="number" id="v-mon" placeholder="Monto $">
             <button class="btn-m" onclick="vender()">COBRAR AHORA</button>
@@ -95,10 +83,10 @@
             <h2 id="t-cl">REGISTRAR CLIENTE</h2>
             <input type="hidden" id="edit-id-cl">
             <input type="text" id="c-nom" placeholder="Nombre completo">
-            <input type="tel" id="c-tel" placeholder="WhatsApp (Ej: 521...)">
+            <input type="tel" id="c-tel" placeholder="Número WhatsApp">
             <button class="btn-m" onclick="guardarCl()">GUARDAR FICHA</button>
         </div>
-        <input type="text" id="bus" placeholder="🔍 Buscar por nombre o tinte..." onkeyup="render()">
+        <input type="text" id="bus" placeholder="🔍 Buscar cliente..." onkeyup="render()">
         <div id="listaClientes"></div>
     </div>
 
@@ -109,21 +97,14 @@
             <input type="text" id="p2-n" placeholder="Nombre Peluquero 2">
             <button class="btn-m" onclick="saveConf()">ACTUALIZAR STAFF</button>
         </div>
-        <div class="card">
-            <h2>PRECIOS</h2>
-            <small>Caballero:</small><input type="number" id="pr-cab">
-            <small>Dama:</small><input type="number" id="pr-dam">
-            <button class="btn-m" onclick="saveConf()">GUARDAR PRECIOS</button>
-        </div>
-        <button class="btn-m" style="background:var(--a); color:white;" onclick="exportar()">💾 RESPALDO TOTAL</button>
+        <button class="btn-m" style="background:var(--a); color:white;" onclick="exportar()">💾 RESPALDO DATOS</button>
     </div>
 
 <script>
-    let db_v = JSON.parse(localStorage.getItem('M5_V')) || [];
-    let db_c = JSON.parse(localStorage.getItem('M5_C')) || [];
-    let db_l = JSON.parse(localStorage.getItem('M5_L')) || [];
-    let db_s = JSON.parse(localStorage.getItem('M5_S')) || {p1:"Peluquero 1", p2:"Peluquero 2"};
-    let db_p = JSON.parse(localStorage.getItem('M5_P')) || {cab:150, dam:250, nin:120, pla:200};
+    let db_v = JSON.parse(localStorage.getItem('M6_V')) || [];
+    let db_c = JSON.parse(localStorage.getItem('M6_C')) || [];
+    let db_l = JSON.parse(localStorage.getItem('M6_L')) || [];
+    let db_s = JSON.parse(localStorage.getItem('M6_S')) || {p1:"Peluquero 1", p2:"Peluquero 2"};
     let fSel = new Date().toISOString().split('T')[0];
 
     function openTab(e, n) {
@@ -135,56 +116,37 @@
     }
 
     function save() {
-        localStorage.setItem('M5_V', JSON.stringify(db_v));
-        localStorage.setItem('M5_C', JSON.stringify(db_c));
-        localStorage.setItem('M5_L', JSON.stringify(db_l));
-        localStorage.setItem('M5_S', JSON.stringify(db_s));
-        localStorage.setItem('M5_P', JSON.stringify(db_p));
+        localStorage.setItem('M6_V', JSON.stringify(db_v));
+        localStorage.setItem('M6_C', JSON.stringify(db_c));
+        localStorage.setItem('M6_L', JSON.stringify(db_l));
+        localStorage.setItem('M6_S', JSON.stringify(db_s));
     }
 
     function saveConf() {
         db_s.p1 = document.getElementById('p1-n').value || db_s.p1;
         db_s.p2 = document.getElementById('p2-n').value || db_s.p2;
-        db_p.cab = document.getElementById('pr-cab').value;
-        db_p.dam = document.getElementById('pr-dam').value;
-        save(); render(); alert("Guardado");
+        save(); render(); alert("Staff Guardado");
     }
 
     function agendar() {
-        const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value, id=document.getElementById('edit-id-cita').value;
+        const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value, t=document.getElementById('a-tel').value;
         if(!n || !f || !h) return alert("Faltan datos");
-        if(id) { let i=db_c.findIndex(x=>x.id==id); db_c[i]={n,f,h,b,id:parseInt(id)}; }
-        else { db_c.push({n,f,h,b,id:Date.now()}); }
-        document.getElementById('edit-id-cita').value=""; document.getElementById('a-nom').value="";
-        save(); render(); alert("Agenda actualizada");
+        db_c.push({n,f,h,b,t,id:Date.now()});
+        save(); render(); alert("Cita Agendada");
     }
-
-    function setPr(t) { document.getElementById('v-mon').value = db_p[t]; }
 
     function vender() {
         const m=parseFloat(document.getElementById('v-mon').value), b=document.getElementById('v-barb').value;
-        if(m) { db_v.push({m,b,f:new Date().toLocaleDateString()}); save(); render(); alert("Cobro ok"); document.getElementById('v-mon').value=""; }
+        if(m) { db_v.push({m,b,f:new Date().toLocaleDateString()}); save(); render(); alert("Cobro ok"); }
     }
 
     function guardarCl() {
-        const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value, id=document.getElementById('edit-id-cl').value;
-        if(!n) return;
-        if(id) { let i=db_l.findIndex(x=>x.id==id); db_l[i].n=n; db_l[i].t=t; }
-        else { db_l.push({n,t,h:[],id:Date.now()}); }
-        document.getElementById('edit-id-cl').value=""; document.getElementById('c-nom').value=""; document.getElementById('c-tel').value="";
-        save(); render(); alert("Ficha guardada");
-    }
-
-    function addH(id) {
-        const f = prompt("Fórmula o Nota Técnica:");
-        if(f) { let i=db_l.findIndex(x=>x.id===id); db_l[i].h.unshift({d:new Date().toLocaleDateString(), t:f}); save(); render(); }
+        const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value;
+        if(n) { db_l.push({n,t,h:[],id:Date.now()}); save(); render(); alert("Cliente guardado"); }
     }
 
     function render() {
         document.getElementById('nP1').innerText=db_s.p1; document.getElementById('nP2').innerText=db_s.p2;
-        document.getElementById('p1-n').value=db_s.p1; document.getElementById('p2-n').value=db_s.p2;
-        document.getElementById('pr-cab').value=db_p.cab; document.getElementById('pr-dam').value=db_p.dam;
-
         const s=document.querySelectorAll('.staff-select');
         s.forEach(x=>x.innerHTML=`<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`);
 
@@ -202,21 +164,17 @@
 
         const lc=document.getElementById('listaCitas'); lc.innerHTML="";
         db_c.filter(x=>x.f===fSel).sort((a,b)=>a.h.localeCompare(b.h)).forEach(c=>{
-            lc.innerHTML+=`<div class="item"><span class="badge">${c.h} | ${c.b}</span><br><b>${c.n}</b><br>
-            <button class="btn-edit" onclick="document.getElementById('edit-id-cita').value='${c.id}';document.getElementById('a-nom').value='${c.n}';document.getElementById('t-cita').innerText='CAMBIAR CITA';window.scrollTo(0,0)">MODIFICAR</button>
-            <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render()}">CANCELAR</button></div>`;
+            let btnWA = c.t ? `<a href="https://wa.me/${c.t}" target="_blank" class="btn-wa">📱 WhatsApp</a>` : '';
+            lc.innerHTML+=`<div class="item"><span class="badge">${c.h} | ${c.b}</span><br><b>${c.n}</b><br>${btnWA} <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render()}">CANCELAR</button></div>`;
         });
 
         const lcl=document.getElementById('listaClientes'), bus=document.getElementById('bus').value.toLowerCase(); lcl.innerHTML="";
-        db_l.filter(x=>x.n.toLowerCase().includes(bus) || x.h.some(h=>h.t.toLowerCase().includes(bus))).forEach(c=>{
-            let hist=c.h.map(h=>`<div class="formula-box"><b>${h.d}:</b> ${h.t}</div>`).join('');
-            lcl.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small>${hist}<br>
-            <button class="btn-edit" onclick="document.getElementById('edit-id-cl').value='${c.id}';document.getElementById('c-nom').value='${c.n}';document.getElementById('c-tel').value='${c.t}';document.getElementById('t-cl').innerText='EDITAR CLIENTE';window.scrollTo(0,0)">EDITAR</button>
-            <button class="btn-edit" style="color:var(--v)" onclick="addH(${c.id})">+ TINTE</button>
-            <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_l=db_l.filter(x=>x.id!==${c.id});save();render()}">ELIMINAR</button></div>`;
+        db_l.filter(x=>x.n.toLowerCase().includes(bus)).forEach(c=>{
+            let btnWA = c.t ? `<a href="https://wa.me/${c.t}" target="_blank" class="btn-wa">📱 WhatsApp</a>` : '';
+            lcl.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small><br>${btnWA} <button class="btn-del" onclick="if(confirm('¿Borrar?')){db_l=db_l.filter(x=>x.id!==${c.id});save();render()}">ELIMINAR</button></div>`;
         });
     }
-    function exportar(){ const b=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="manuel_salon.json"; a.click(); }
+    function exportar(){ const b=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="backup_salon.json"; a.click(); }
     render();
 </script>
 </body>
