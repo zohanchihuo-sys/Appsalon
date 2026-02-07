@@ -102,24 +102,103 @@
     </main>
 
     <script>
-        // FUNCIÓN PARA ABRIR/CERRAR MENÚ
+                // --- BASE DE DATOS ---
+        const DB_CITAS = "MS_CITAS_V2";
+        let citas = JSON.parse(localStorage.getItem(DB_CITAS)) || [];
+        let diaSeleccionado = new Date().toISOString().split('T')[0];
+
+        // --- LÓGICA DEL MENÚ LATERAL ---
         function toggleMenu() {
             document.getElementById('drawer').classList.toggle('active');
             document.getElementById('overlay').classList.toggle('active');
         }
 
-        // FUNCIÓN PARA CAMBIAR DE SECCIÓN SIN MEZCLAR
         function showSection(id) {
             // Ocultar todas las secciones
-            const sections = document.querySelectorAll('.section');
-            sections.forEach(s => s.classList.remove('active'));
-
-            // Mostrar la seleccionada
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            // Mostrar la que elegiste
             document.getElementById(id).classList.add('active');
-
-            // Cerrar el menú automáticamente
-            toggleMenu();
+            
+            // Si entras a Agenda o Inicio, actualizar los datos
+            if(id === 'agenda') renderAgenda();
+            if(id === 'inicio') renderInicio();
+            
+            toggleMenu(); // Cerrar menú al elegir
         }
+
+        // --- LÓGICA DE LA AGENDA ---
+        function guardarCita() {
+            const n = document.getElementById('a-nom').value;
+            const t = document.getElementById('a-tel').value;
+            const f = document.getElementById('a-fec').value;
+            const h = document.getElementById('a-hor').value;
+
+            if(n && f && h) {
+                citas.push({ n, t, f, h, id: Date.now() });
+                localStorage.setItem(DB_CITAS, JSON.stringify(citas));
+                
+                // Limpiar campos
+                document.getElementById('a-nom').value = "";
+                document.getElementById('a-tel').value = "";
+                
+                renderAgenda();
+                alert("✅ Cita agendada correctamente");
+            } else {
+                alert("❌ Por favor llena Nombre, Fecha y Hora");
+            }
+        }
+
+        function borrarCita(id) {
+            if(confirm("¿Eliminar esta cita?")) {
+                citas = citas.filter(c => c.id !== id);
+                localStorage.setItem(DB_CITAS, JSON.stringify(citas));
+                renderAgenda();
+            }
+        }
+
+        function renderAgenda() {
+            const cal = document.getElementById('calendario'); cal.innerHTML = "";
+            const d = new Date(); const ultDay = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+            
+            // Dibujar Calendario
+            for(let i=1; i<=ultDay; i++) {
+                let fechaC = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+                let clase = citas.some(c => c.f === fechaC) ? 'has-c' : '';
+                let sel = fechaC === diaSeleccionado ? 'sel-d' : '';
+                cal.innerHTML += `<div class="cal-d ${clase} ${sel}" onclick="diaSeleccionado='${fechaC}';renderAgenda()">${i}</div>`;
+            }
+
+            // Dibujar Lista de Citas
+            const list = document.getElementById('lista-citas');
+            list.innerHTML = `<h3 style="color:var(--oro); font-size:14px; margin-top:20px;">CITAS DEL DÍA: ${diaSeleccionado}</h3>`;
+            
+            const filtradas = citas.filter(c => c.f === diaSeleccionado).sort((a,b)=>a.h.localeCompare(b.h));
+            
+            if(filtradas.length === 0) {
+                list.innerHTML += `<p style="color:gray; font-size:12px;">No hay citas para este día.</p>`;
+            }
+
+            filtradas.forEach(c => {
+                let waLink = c.t ? `<a href="https://wa.me/${c.t}?text=Hola%20${c.n},%20te%20confirmo%20tu%20cita%20en%20Manuel%20Salón%20el%20día%20${c.f}%20a%20las%20${c.h}" target="_blank" class="btn-wa" style="background:#25d366; color:white; text-decoration:none; padding:8px 12px; border-radius:6px; font-size:12px; display:inline-block; margin-top:10px; font-weight:bold;">📱 WhatsApp</a>` : '';
+                
+                list.innerHTML += `
+                    <div class="cita-item" style="background:#1a1a1a; padding:12px; border-radius:10px; margin-top:10px; border-left:4px solid #d4af37; position:relative;">
+                        <b style="color:white;">${c.h} hs</b> - <span style="color:#ccc;">${c.n}</span> <br>
+                        ${waLink}
+                        <button onclick="borrarCita(${c.id})" style="color:#e74c3c; background:none; border:none; position:absolute; right:10px; top:12px; font-weight:bold; cursor:pointer;">✕</button>
+                    </div>`;
+            });
+        }
+
+        function renderInicio() {
+            const hoy = new Date().toISOString().split('T')[0];
+            const totalHoy = citas.filter(c => c.f === hoy).length;
+            document.getElementById('resumen-hoy').innerHTML = `Hoy tienes <b style="color:var(--oro); font-size:1.2rem;">${totalHoy}</b> citas agendadas.`;
+        }
+
+        // Carga inicial
+        renderInicio();
+        
     </script>
 </body>
 </html>
