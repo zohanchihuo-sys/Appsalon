@@ -3,143 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manuel Salón - App Pro</title>
+    <title>Manuel Salón - Scanner Pro</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; }
-        body { font-family: 'Trebuchet MS', sans-serif; background: var(--bg); color: #eee; margin: 0; overflow-x: hidden; }
-        
-        /* HEADER PERSONALIZADO */
-        header { background: #000; padding: 18px; display: flex; align-items: center; border-bottom: 2px solid var(--oro); position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.8); }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #eee; margin: 0; overflow-x: hidden; }
+        header { background: #000; padding: 15px; display: flex; align-items: center; border-bottom: 2px solid var(--oro); position: sticky; top: 0; z-index: 100; }
         .menu-icon { font-size: 26px; color: var(--oro); cursor: pointer; margin-right: 15px; }
-        .brand { color: var(--oro); font-weight: bold; letter-spacing: 3px; font-size: 1.1rem; text-transform: uppercase; }
-
-        /* MENÚ DESPLEGABLE */
-        .nav-drawer { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: #111; z-index: 200; transition: 0.4s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--oro); }
+        .brand { color: var(--oro); font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
+        .nav-drawer { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: #111; z-index: 200; transition: 0.3s; border-right: 1px solid var(--oro); }
         .nav-drawer.active { left: 0; }
-        .nav-header { padding: 30px 20px; text-align: center; background: #000; border-bottom: 1px solid #333; }
-        .nav-item { padding: 18px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; text-decoration: none; font-size: 14px; font-weight: 600; cursor: pointer; }
-        .nav-item:hover { background: #1a1a1a; color: var(--oro); }
+        .nav-item { padding: 18px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; text-decoration: none; cursor: pointer; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 150; }
         .overlay.active { display: block; }
-
-        /* CONTENEDORES */
-        .content { padding: 20px; display: none; animation: fadeIn 0.4s; }
+        .content { padding: 20px; display: none; }
         .content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        .card { background: var(--card); border-radius: 15px; padding: 20px; margin-bottom: 15px; border: 1px solid #252525; }
-        h2 { color: var(--oro); text-align: center; font-size: 0.9rem; text-transform: uppercase; margin-top: 0; letter-spacing: 1px; }
-        
-        /* INPUTS Y BOTONES */
-        input, select, textarea { width: 100%; padding: 14px; margin: 10px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 16px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; letter-spacing: 1px; }
-        .grid-q { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-bottom: 15px; }
-        .btn-q { background: #000; color: var(--oro); border: 1px solid var(--oro); padding: 12px 5px; border-radius: 8px; font-size: 10px; font-weight: bold; }
-
-        /* DASHBOARD STATS */
-        .stat-box { background: #000; padding: 20px; border-radius: 12px; text-align: center; border: 1px solid #222; margin-bottom: 12px; }
-        .stat-box small { color: #777; font-size: 10px; text-transform: uppercase; letter-spacing: 1px; }
-        .stat-box b { color: var(--v); font-size: 1.8rem; display: block; margin-top: 5px; }
-
-        /* LISTAS */
+        .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #252525; }
+        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 16px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; margin-top: 5px; }
+        .btn-scan { background: #444; color: white; border: 1px solid var(--oro); padding: 10px; margin-bottom: 10px; border-radius: 8px; width: 100%; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 15px; display: none; border: 2px solid var(--oro); }
         .item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--oro); position: relative; }
-        .btn-del { position: absolute; top: 10px; right: 10px; background: var(--r); color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 10px; }
-        .wa-link { color: var(--v); text-decoration: none; font-weight: bold; font-size: 12px; display: inline-block; margin-top: 10px; }
+        .badge { background: var(--a); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        <div class="brand">MANUEL SALÓN</div>
+        <div class="brand">MANUEL SALÓN SCAN</div>
     </header>
 
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
     <nav class="nav-drawer" id="drawer">
-        <div class="nav-header">
-            <b style="color: var(--oro); letter-spacing: 2px;">PANEL PRO</b>
-        </div>
-        <div class="nav-item" onclick="showSec('sec-dash')">🏠 INICIO (INGRESOS)</div>
-        <div class="nav-item" onclick="showSec('sec-agenda')">📅 AGENDA DE CITAS</div>
-        <div class="nav-item" onclick="showSec('sec-ventas')">💰 COBRAR SERVICIO</div>
-        <div class="nav-item" onclick="showSec('sec-inv')">📦 STOCK / INVENTARIO</div>
-        <div class="nav-item" onclick="showSec('sec-cls')">👥 MIS CLIENTES</div>
-        <div class="nav-item" onclick="showSec('sec-ajustes')">⚙️ AJUSTE DE PRECIOS</div>
-        <div class="nav-item" onclick="exportar()" style="color: var(--a);">💾 GUARDAR RESPALDO</div>
+        <div style="padding:20px; text-align:center; color:var(--oro)"><b>SISTEMA LÁSER</b></div>
+        <div class="nav-item" onclick="showSec('sec-dash')">🏠 CAJA</div>
+        <div class="nav-item" onclick="showSec('sec-ventas')">💰 VENTA / ESCÁNER</div>
+        <div class="nav-item" onclick="showSec('sec-cls')">👥 CLIENTES</div>
+        <div class="nav-item" onclick="showSec('sec-inv')">📦 STOCK / ENTRADAS</div>
     </nav>
 
-    <div id="sec-dash" class="content active">
-        <div class="stat-box"><small>Hoy: Peluquero 1</small><b id="sB1">$0</b></div>
-        <div class="stat-box"><small>Hoy: Peluquero 2</small><b id="sB2">$0</b></div>
-        <div class="stat-box" style="border-color: var(--oro);"><small>Total del Mes</small><b id="sM" style="color: var(--oro);">$0</b></div>
+    <div id="scanner-container" style="padding: 0 20px; margin-top: 10px;">
+        <div id="reader"></div>
+        <button id="btn-stop" class="btn-m" style="display:none; background:var(--r); color:white; margin-bottom: 15px;" onclick="stopScan()">CERRAR CÁMARA</button>
     </div>
 
-    <div id="sec-agenda" class="content">
-        <div class="card">
-            <h2>📅 NUEVA CITA EN MANUEL SALÓN</h2>
-            <select id="cb"><option value="Peluquero 1">Peluquero 1</option><option value="Peluquero 2">Peluquero 2</option></select>
-            <input type="text" id="cn" placeholder="Nombre del Cliente">
-            <input type="date" id="cf"><input type="time" id="ch">
-            <textarea id="ce" placeholder="Nota de estilo (Ej: Degradado bajo)"></textarea>
-            <button class="btn-m" onclick="agendar()">REGISTRAR CITA</button>
+    <div id="sec-dash" class="content active">
+        <div class="card" style="text-align:center">
+            <h1 id="totalHoy" style="color:var(--v);">$0</h1>
+            <small>INGRESOS HOY</small>
         </div>
-        <div id="listaCitas"></div>
     </div>
 
     <div id="sec-ventas" class="content">
         <div class="card">
-            <h2>💰 COBRO DE SERVICIO</h2>
-            <select id="vb"><option value="P1">Peluquero 1</option><option value="P2">Peluquero 2</option></select>
-            <div class="grid-q">
-                <button class="btn-q" onclick="setM('c')">CABALLERO</button>
-                <button class="btn-q" onclick="setM('b')">BARBA</button>
-                <button class="btn-q" onclick="setM('co')">COMBO</button>
-                <button class="btn-q" onclick="setM('d')">DAMA</button>
-                <button class="btn-q" onclick="setM('n')">NIÑO</button>
-                <button class="btn-q" onclick="setM('p')">PRODUCTO</button>
-            </div>
-            <input type="text" id="vn" placeholder="Nombre">
-            <input type="tel" id="vt" placeholder="WhatsApp (Ej: 521...)">
-            <input type="number" id="vm" placeholder="Monto $">
-            <button class="btn-m" onclick="vender()">FINALIZAR COBRO</button>
+            <h2>COBRAR PRODUCTO</h2>
+            <button class="btn-scan" onclick="startScan('venta')">📷 ESCANEAR CÓDIGO</button>
+            <input type="text" id="v_code" placeholder="Código de barras">
+            <input type="text" id="v_prod" placeholder="Producto detectado" readonly>
+            <input type="number" id="v_monto" placeholder="Precio $">
+            <button class="btn-m" onclick="venderProd()">FINALIZAR COBRO</button>
         </div>
+    </div>
+
+    <div id="sec-cls" class="content">
+        <div class="card">
+            <h2>GESTIÓN CLIENTES</h2>
+            <input type="text" id="n_cn" placeholder="Nombre">
+            <input type="tel" id="n_ct" placeholder="WhatsApp">
+            <button class="btn-m" onclick="guardarCliente()">GUARDAR</button>
+        </div>
+        <div id="listaClientes"></div>
     </div>
 
     <div id="sec-inv" class="content">
         <div class="card">
-            <h2>📦 CONTROL DE STOCK</h2>
-            <input type="text" id="in" placeholder="Nombre del Producto">
-            <input type="number" id="iq" placeholder="Cantidad Actual">
-            <button class="btn-m" onclick="addInv()" style="background: #222; color: var(--a); border: 1px solid var(--a);">GUARDAR EN INVENTARIO</button>
+            <h2>ENTRADA DE MERCANCÍA</h2>
+            <button class="btn-scan" onclick="startScan('stock')">📷 ESCANEAR PARA ALTA</button>
+            <input type="text" id="i_code" placeholder="Código de barras">
+            <input type="text" id="i_n" placeholder="Nombre del Producto">
+            <input type="number" id="i_q" placeholder="Cantidad">
+            <input type="number" id="i_p" placeholder="Precio Venta $">
+            <button class="btn-m" onclick="addInv()" style="background:var(--v); color:white;">REGISTRAR EN STOCK</button>
         </div>
         <div id="listaInv"></div>
     </div>
 
-    <div id="sec-cls" class="content">
-        <input type="text" id="bus" placeholder="🔍 Buscar cliente..." onkeyup="listarClientes()">
-        <div id="listaClientes"></div>
-    </div>
-
-    <div id="sec-ajustes" class="content">
-        <div class="card">
-            <h2>⚙️ CONFIGURAR PRECIOS</h2>
-            <small>Caba:</small><input type="number" id="p_c">
-            <small>Barba:</small><input type="number" id="p_b">
-            <small>Combo:</small><input type="number" id="p_co">
-            <small>Dama:</small><input type="number" id="p_d">
-            <small>Niño:</small><input type="number" id="p_n">
-            <small>Producto:</small><input type="number" id="p_p">
-            <button class="btn-m" onclick="guardarPrecios()">ACTUALIZAR TARIFAS</button>
-        </div>
-    </div>
-
 <script>
     let vts = JSON.parse(localStorage.getItem('ms_v')) || [];
-    let cts = JSON.parse(localStorage.getItem('ms_c')) || [];
     let cls = JSON.parse(localStorage.getItem('ms_l')) || [];
     let inv = JSON.parse(localStorage.getItem('ms_i')) || [];
-    let pre = JSON.parse(localStorage.getItem('ms_p')) || {c:200, b:100, co:250, d:300, n:150, p:0};
+    let html5QrCode;
 
     function toggleMenu() {
         document.getElementById('drawer').classList.toggle('active');
@@ -150,77 +105,98 @@
         document.querySelectorAll('.content').forEach(s => s.classList.remove('active'));
         document.getElementById(id).classList.add('active');
         toggleMenu();
+        stopScan();
         render();
     }
 
-    function render() {
-        stats(); listarCitas(); listarClientes(); listarInv();
-        document.getElementById('p_c').value = pre.c;
-        document.getElementById('p_b').value = pre.b;
-        document.getElementById('p_co').value = pre.co;
-        document.getElementById('p_d').value = pre.d;
-        document.getElementById('p_n').value = pre.n;
-        document.getElementById('p_p').value = pre.p;
+    // --- LÓGICA DEL ESCÁNER ---
+    function startScan(modo) {
+        document.getElementById('reader').style.display = 'block';
+        document.getElementById('btn-stop').style.display = 'block';
+        html5QrCode = new Html5Qrcode("reader");
+        html5QrCode.start(
+            { facingMode: "environment" }, 
+            { fps: 10, qrbox: { width: 250, height: 150 } },
+            (decodedText) => {
+                if(modo === 'stock') {
+                    document.getElementById('i_code').value = decodedText;
+                    // Buscar si ya existe para autocompletar
+                    let p = inv.find(x => x.code === decodedText);
+                    if(p) { document.getElementById('i_n').value = p.n; document.getElementById('i_p').value = p.p; }
+                } else {
+                    document.getElementById('v_code').value = decodedText;
+                    let p = inv.find(x => x.code === decodedText);
+                    if(p) { 
+                        document.getElementById('v_prod').value = p.n; 
+                        document.getElementById('v_monto').value = p.p; 
+                    } else { alert("Producto no encontrado en inventario"); }
+                }
+                stopScan();
+            }
+        ).catch(err => alert("Error de cámara: " + err));
     }
 
-    function setM(t) { document.getElementById('vm').value = pre[t]; }
-
-    function agendar() {
-        const n=document.getElementById('cn').value, f=document.getElementById('cf').value, h=document.getElementById('ch').value, e=document.getElementById('ce').value, b=document.getElementById('cb').value;
-        if(n&&f&&h) { cts.push({n,f,h,e,b,id:Date.now()}); save(); render(); alert("Cita agendada en Manuel Salón"); }
-    }
-
-    function vender() {
-        const n=document.getElementById('vn').value, t=document.getElementById('vt').value, m=parseFloat(document.getElementById('vm').value), b=document.getElementById('vb').value;
-        if(n && m) {
-            vts.push({m, f:new Date().toLocaleDateString(), b, id:Date.now()});
-            let i=cls.findIndex(c=>c.t===t);
-            if(i>-1) { cls[i].p+=Math.floor(m/10); cls[i].u=Date.now(); }
-            else if(t) { cls.push({n, t, p:Math.floor(m/10), u:Date.now()}); }
-            save(); render(); alert("Venta registrada con éxito");
+    function stopScan() {
+        if(html5QrCode) {
+            html5QrCode.stop().then(() => {
+                document.getElementById('reader').style.display = 'none';
+                document.getElementById('btn-stop').style.display = 'none';
+            });
         }
     }
 
-    function stats() {
-        const hoy = new Date().toLocaleDateString(); let b1=0, b2=0, m=0;
-        vts.forEach(v=>{ if(v.f===hoy) { if(v.b==='P1') b1+=v.m; else b2+=v.m; } m+=v.m; });
-        document.getElementById('sB1').innerText='$'+b1; document.getElementById('sB2').innerText='$'+b2;
-        document.getElementById('sM').innerText='$'+m;
-    }
-
-    function listarCitas() {
-        const div = document.getElementById('listaCitas'); div.innerHTML = "";
-        cts.sort((a,b)=> a.f.localeCompare(b.f)).forEach(c => {
-            div.innerHTML += `<div class="item">
-                <small style="color:var(--oro)">${c.b} | ${c.f}</small><br>
-                <b>${c.h} hs</b> - ${c.n} <br><small>${c.e || ''}</small>
-                <button class="btn-del" onclick="cts=cts.filter(x=>x.id!==${c.id});save();render()">X</button>
-                <br><a href="https://wa.me/?text=Hola%20${c.n},%20te%20confirmamos%20tu%20cita%20en%20Manuel%20Salón%20el%20día%20${c.f}%20a%20las%20${c.h}." class="wa-link">📱 ENVIAR CONFIRMACIÓN</a>
-            </div>`;
-        });
-    }
-
-    function listarClientes() {
-        const div = document.getElementById('listaClientes'); div.innerHTML = "";
-        const bus = document.getElementById('bus').value.toLowerCase();
-        cls.filter(c=>c.n.toLowerCase().includes(bus)).forEach(c => {
-            div.innerHTML += `<div class="item"><b>${c.n}</b> - ${c.p} Puntos <br> <a href="https://wa.me/${c.t}" class="wa-link">📱 WHATSAPP</a></div>`;
-        });
-    }
-
+    // --- ACCIONES ---
     function addInv() {
-        const n=document.getElementById('in').value, q=parseInt(document.getElementById('iq').value);
-        if(n && q>=0) { inv.push({n, q, id:Date.now()}); save(); render(); document.getElementById('in').value=""; document.getElementById('iq').value=""; }
+        const n = document.getElementById('i_n').value, q = parseInt(document.getElementById('i_q').value), 
+              p = document.getElementById('i_p').value, code = document.getElementById('i_code').value;
+        if(n && q && code) {
+            let idx = inv.findIndex(x => x.code === code);
+            if(idx > -1) { inv[idx].q += q; inv[idx].p = p; } 
+            else { inv.push({n, q, p, code, id:Date.now()}); }
+            save(); render(); alert("Stock Actualizado");
+            document.getElementById('i_n').value=""; document.getElementById('i_q').value=""; document.getElementById('i_code').value="";
+        }
+    }
+
+    function venderProd() {
+        const code = document.getElementById('v_code').value, m = parseFloat(document.getElementById('v_monto').value);
+        let idx = inv.findIndex(x => x.code === code);
+        if(idx > -1 && inv[idx].q > 0) {
+            inv[idx].q--;
+            vts.push({m, f:new Date().toLocaleDateString(), prod: inv[idx].n});
+            save(); render(); alert("Venta realizada");
+            document.getElementById('v_code').value=""; document.getElementById('v_prod').value=""; document.getElementById('v_monto').value="";
+        } else { alert("Sin stock o producto no existe"); }
+    }
+
+    function guardarCliente() {
+        const n = document.getElementById('n_cn').value, t = document.getElementById('n_ct').value;
+        if(n && t) { cls.push({n, t, id:Date.now()}); save(); render(); }
     }
 
     function listarInv() {
         const div = document.getElementById('listaInv'); div.innerHTML = "";
-        inv.forEach(x => { div.innerHTML += `<div class="item" style="border-left-color:var(--a)"><b>${x.n}</b>: ${x.q} unidades <button class="btn-del" onclick="inv=inv.filter(i=>i.id!==${x.id});save();render()">X</button></div>`; });
+        inv.forEach(x => {
+            div.innerHTML += `<div class="item">
+                <b>${x.n}</b> <span class="badge">COD: ${x.code}</span><br>
+                Stock: ${x.q} | Precio: $${x.p}
+            </div>`;
+        });
     }
 
-    function save() { localStorage.setItem('ms_v', JSON.stringify(vts)); localStorage.setItem('ms_c', JSON.stringify(cts)); localStorage.setItem('ms_l', JSON.stringify(cls)); localStorage.setItem('ms_i', JSON.stringify(inv)); }
-    function guardarPrecios() { pre={c:document.getElementById('p_c').value, b:document.getElementById('p_b').value, co:document.getElementById('p_co').value, d:document.getElementById('p_d').value, n:document.getElementById('p_n').value, p:document.getElementById('p_p').value}; localStorage.setItem('ms_p', JSON.stringify(pre)); alert("Precios actualizados en Manuel Salón"); }
-    function exportar() { const blob=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="manuel_salon_backup.json"; a.click(); }
+    function stats() {
+        const hoy = new Date().toLocaleDateString(); let t = 0;
+        vts.forEach(v => { if(v.f === hoy) t += v.m; });
+        document.getElementById('totalHoy').innerText = '$' + t;
+    }
+
+    function save() {
+        localStorage.setItem('ms_v', JSON.stringify(vts));
+        localStorage.setItem('ms_l', JSON.stringify(cls));
+        localStorage.setItem('ms_i', JSON.stringify(inv));
+    }
+
+    function render() { stats(); listarInv(); }
     render();
 </script>
 </body>
