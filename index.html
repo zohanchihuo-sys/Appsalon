@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manuel Salón - Ultimate Edition</title>
+    <title>Manuel Salón - Enterprise Pro</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
         :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; --p: #9b59b6; }
@@ -13,20 +13,19 @@
         .brand { color: var(--oro); font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
         .nav-drawer { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: #111; z-index: 200; transition: 0.3s; border-right: 1px solid var(--oro); }
         .nav-drawer.active { left: 0; }
-        .nav-item { padding: 15px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; text-decoration: none; cursor: pointer; font-size: 14px; }
+        .nav-item { padding: 15px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; cursor: pointer; font-size: 14px; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 150; }
         .overlay.active { display: block; }
         .content { padding: 15px; display: none; }
         .content.active { display: block; }
         .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #252525; }
         input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; }
+        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; margin-top: 5px; }
         .btn-scan { background: #333; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; margin-bottom: 10px; }
         #reader { width: 100%; border-radius: 12px; overflow: hidden; display: none; border: 2px solid var(--oro); margin-bottom: 10px; }
-        .item { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--oro); position: relative; }
-        .hist-item { background: #000; padding: 8px; border-radius: 6px; margin-top: 5px; font-size: 12px; border: 1px solid #333; }
-        .btn-del { background: var(--r); color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 10px; margin-top: 5px; }
-        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+        .item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--oro); position: relative; }
+        .hist-item { background: #000; padding: 8px; border-radius: 6px; margin-top: 5px; font-size: 12px; border: 1px solid #333; color: #bbb; }
+        .btn-del { background: var(--r); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; margin-top: 8px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -44,7 +43,7 @@
         <div class="nav-item" onclick="showSec('sec-ventas')">💰 COBRAR / ESCÁNER</div>
         <div class="nav-item" onclick="showSec('sec-cls')">👥 CLIENTES / TINTES</div>
         <div class="nav-item" onclick="showSec('sec-inv')">📦 INVENTARIO</div>
-        <div class="nav-item" onclick="showSec('sec-ajustes')">⚙️ AJUSTES PRECIOS</div>
+        <div class="nav-item" onclick="showSec('sec-ajustes')">⚙️ AJUSTES</div>
         <div class="nav-item" onclick="exportar()" style="color:var(--a)">💾 RESPALDO</div>
     </nav>
 
@@ -52,65 +51,55 @@
 
     <div id="sec-dash" class="content active">
         <div class="card" style="text-align:center">
-            <small>INGRESOS HOY</small><h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
-            <div class="stats-grid">
-                <div class="card" style="margin:0"><small>Peluquero 1</small><br><b id="sB1">$0</b></div>
-                <div class="card" style="margin:0"><small>Peluquero 2</small><br><b id="sB2">$0</b></div>
+            <small>TOTAL HOY</small><h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div class="card" style="margin:0"><small>Barbero 1</small><br><b id="sB1">$0</b></div>
+                <div class="card" style="margin:0"><small>Barbero 2</small><br><b id="sB2">$0</b></div>
             </div>
         </div>
     </div>
 
     <div id="sec-ventas" class="content">
         <div class="card">
-            <h2>COBRAR</h2>
-            <select id="vb"><option value="P1">Peluquero 1</option><option value="P2">Peluquero 2</option></select>
+            <h2>PUNTO DE VENTA</h2>
+            <select id="vb"><option value="P1">Barbero 1</option><option value="P2">Barbero 2</option></select>
             <button class="btn-scan" onclick="startScan('venta')">📷 ESCANEAR PRODUCTO</button>
             <input type="text" id="vn" placeholder="Nombre Cliente">
             <input type="number" id="vm" placeholder="Monto $">
-            <button class="btn-m" onclick="vender()">FINALIZAR VENTA</button>
+            <button class="btn-m" onclick="vender()">REGISTRAR VENTA</button>
         </div>
     </div>
 
     <div id="sec-cls" class="content">
         <div class="card">
-            <h2 id="t-cls">+ AGREGAR CLIENTE</h2>
+            <h2 id="t-cls">+ REGISTRAR CLIENTE</h2>
             <input type="hidden" id="edit-id">
             <input type="text" id="n_cn" placeholder="Nombre">
             <input type="tel" id="n_ct" placeholder="WhatsApp">
-            <button id="btn-g-c" class="btn-m" onclick="guardarCliente()">GUARDAR CLIENTE</button>
-            <button id="btn-c-e" class="btn-m" style="background:#444; color:white; display:none; margin-top:5px" onclick="cancelEdit()">CANCELAR</button>
+            <button id="btn-g-c" class="btn-m" onclick="guardarCliente()">GUARDAR</button>
+            <button id="btn-c-e" class="btn-m" style="background:#444; color:white; display:none;" onclick="cancelEdit()">CANCELAR</button>
         </div>
-        <input type="text" id="bus" placeholder="🔍 Buscar cliente o tinte..." onkeyup="listarClientes()">
+        <input type="text" id="bus" placeholder="🔍 Buscar por nombre o tratamiento..." onkeyup="listarClientes()">
         <div id="listaClientes" style="margin-top:15px"></div>
     </div>
 
     <div id="sec-inv" class="content">
         <div class="card">
-            <h2>STOCK</h2>
+            <h2>INVENTARIO</h2>
             <button class="btn-scan" onclick="startScan('stock')">📷 ESCANEAR CÓDIGO</button>
             <input type="text" id="i_c" placeholder="Código de barras">
             <input type="text" id="i_n" placeholder="Producto">
             <input type="number" id="i_q" placeholder="Cantidad">
-            <input type="number" id="i_p" placeholder="Precio Venta $">
-            <button class="btn-m" onclick="addInv()">REGISTRAR STOCK</button>
+            <input type="number" id="i_p" placeholder="Precio $">
+            <button class="btn-m" onclick="addInv()">GUARDAR STOCK</button>
         </div>
         <div id="listaInv"></div>
     </div>
 
-    <div id="sec-ajustes" class="content">
-        <div class="card">
-            <h2>PRECIOS RÁPIDOS</h2>
-            <small>Corte:</small><input type="number" id="p_c">
-            <small>Barba:</small><input type="number" id="p_b">
-            <button class="btn-m" onclick="guardarPrecios()">ACTUALIZAR PRECIOS</button>
-        </div>
-    </div>
-
 <script>
-    let vts = JSON.parse(localStorage.getItem('m_v')) || [];
-    let cls = JSON.parse(localStorage.getItem('m_l')) || [];
-    let inv = JSON.parse(localStorage.getItem('m_i')) || [];
-    let pre = JSON.parse(localStorage.getItem('m_p')) || {c:200, b:100};
+    let vts = JSON.parse(localStorage.getItem('ms_v')) || [];
+    let cls = JSON.parse(localStorage.getItem('ms_l')) || [];
+    let inv = JSON.parse(localStorage.getItem('ms_i')) || [];
     let html5QrCode;
 
     function toggleMenu() { document.getElementById('drawer').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
@@ -121,30 +110,33 @@
         html5QrCode = new Html5Qrcode("reader");
         html5QrCode.start({facingMode:"environment"}, {fps:10, qrbox:250}, (txt) => {
             if(m==='stock') { document.getElementById('i_c').value=txt; let p=inv.find(x=>x.c===txt); if(p){document.getElementById('i_n').value=p.n; document.getElementById('i_p').value=p.p;} }
-            else { let p=inv.find(x=>x.c===txt); if(p){document.getElementById('vn').value=p.n; document.getElementById('vm').value=p.p;} else alert("No en stock"); }
+            else { let p=inv.find(x=>x.c===txt); if(p){document.getElementById('vn').value=p.n; document.getElementById('vm').value=p.p;} else alert("No encontrado"); }
             stopScan();
-        }).catch(e=>alert("Cámara error"));
+        }).catch(e=>console.log(e));
     }
     function stopScan() { if(html5QrCode){ html5QrCode.stop().then(()=>{document.getElementById('reader').style.display='none'; document.getElementById('btn-stop').style.display='none';}); } }
 
     function guardarCliente() {
         const n=document.getElementById('n_cn').value, t=document.getElementById('n_ct').value, id=document.getElementById('edit-id').value;
+        if(!n) return;
         if(id) { let i=cls.findIndex(x=>x.id==id); cls[i].n=n; cls[i].t=t; }
         else { cls.push({n, t, h:[], id:Date.now()}); }
         cancelEdit(); save(); render();
     }
-    function cancelEdit() { document.getElementById('edit-id').value=""; document.getElementById('n_cn').value=""; document.getElementById('n_ct').value=""; document.getElementById('btn-c-e').style.display="none"; document.getElementById('t-cls').innerText="+ AGREGAR CLIENTE"; }
+    function cancelEdit() { document.getElementById('edit-id').value=""; document.getElementById('n_cn').value=""; document.getElementById('n_ct').value=""; document.getElementById('btn-c-e').style.display="none"; document.getElementById('t-cls').innerText="+ REGISTRAR CLIENTE"; }
 
-    function addH(id) { const txt=prompt("Fórmula/Tinte:"); if(txt){ let i=cls.findIndex(x=>x.id===id); cls[i].h.unshift({f:new Date().toLocaleDateString(), t:txt}); save(); render(); } }
+    function editCl(id){ const c=cls.find(x=>x.id===id); document.getElementById('edit-id').value=c.id; document.getElementById('n_cn').value=c.n; document.getElementById('n_ct').value=c.t; document.getElementById('btn-c-e').style.display="block"; document.getElementById('t-cls').innerText="✏️ EDITANDO CLIENTE"; window.scrollTo(0,0); }
+
+    function addH(id) { const txt=prompt("Nota Técnica (Tinte/Mechas):"); if(txt){ let i=cls.findIndex(x=>x.id===id); cls[i].h.unshift({f:new Date().toLocaleDateString(), t:txt}); save(); render(); } }
 
     function vender() {
         const m=parseFloat(document.getElementById('vm').value), b=document.getElementById('vb').value, n=document.getElementById('vn').value;
-        if(m){ vts.push({m,b,f:new Date().toLocaleDateString(), n}); save(); render(); alert("Venta OK"); }
+        if(m){ vts.push({m,b,f:new Date().toLocaleDateString(), n}); save(); render(); alert("Venta Guardada"); document.getElementById('vm').value=""; document.getElementById('vn').value=""; }
     }
 
     function addInv() {
         const n=document.getElementById('i_n').value, q=parseInt(document.getElementById('i_q').value), p=document.getElementById('i_p').value, c=document.getElementById('i_c').value;
-        if(n&&q){ let i=inv.findIndex(x=>x.c===c); if(i>-1){inv[i].q+=q; inv[i].p=p;} else {inv.push({n,q,p,c,id:Date.now()});} save(); render(); }
+        if(n&&q){ let i=inv.findIndex(x=>x.c===c); if(i>-1){inv[i].q+=q; inv[i].p=p;} else {inv.push({n,q,p,c,id:Date.now()});} save(); render(); alert("Stock ok"); }
     }
 
     function listarClientes() {
@@ -152,12 +144,13 @@
         cls.filter(x=>x.n.toLowerCase().includes(b) || x.h.some(h=>h.t.toLowerCase().includes(b))).forEach(c=>{
             let hHtml = c.h.map(h=>`<div class="hist-item"><b>${h.f}:</b> ${h.t}</div>`).join('');
             d.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small>${hHtml}
-            <button class="btn-m" style="padding:5px; font-size:10px; margin-top:5px; background:var(--a); color:white" onclick="addH(${c.id})">+ TINTE</button>
-            <button class="btn-m" style="padding:5px; font-size:10px; background:var(--v); color:white" onclick="editCl(${c.id})">EDITAR</button>
-            <button class="btn-del" onclick="cls=cls.filter(x=>x.id!==${c.id});save();render()">BORRAR</button></div>`;
+            <div style="display:flex; gap:5px; margin-top:10px">
+                <button class="btn-m" style="padding:8px; font-size:10px; background:var(--a); color:white" onclick="addH(${c.id})">+ TINTE</button>
+                <button class="btn-m" style="padding:8px; font-size:10px; background:var(--v); color:white" onclick="editCl(${c.id})">EDITAR</button>
+                <button class="btn-del" onclick="if(confirm('¿Borrar cliente?')){cls=cls.filter(x=>x.id!==${c.id});save();render();}">ELIMINAR</button>
+            </div></div>`;
         });
     }
-    function editCl(id){ const c=cls.find(x=>x.id===id); document.getElementById('edit-id').value=c.id; document.getElementById('n_cn').value=c.n; document.getElementById('n_ct').value=c.t; document.getElementById('btn-c-e').style.display="block"; document.getElementById('t-cls').innerText="✏️ EDITAR CLIENTE"; window.scrollTo(0,0); }
 
     function stats() {
         const h=new Date().toLocaleDateString(); let b1=0, b2=0, t=0;
@@ -165,10 +158,9 @@
         document.getElementById('sB1').innerText='$'+b1; document.getElementById('sB2').innerText='$'+b2; document.getElementById('tH').innerText='$'+t;
     }
     function listarInv() { const d=document.getElementById('listaInv'); d.innerHTML=""; inv.forEach(x=>{ d.innerHTML+=`<div class="item"><b>${x.n}</b> (${x.q} pzs) - $${x.p} <button class="btn-del" onclick="inv=inv.filter(i=>i.id!==${x.id});save();render()">X</button></div>`; }); }
-    function save(){ localStorage.setItem('m_v', JSON.stringify(vts)); localStorage.setItem('m_l', JSON.stringify(cls)); localStorage.setItem('m_i', JSON.stringify(inv)); localStorage.setItem('m_p', JSON.stringify(pre)); }
-    function render(){ stats(); listarClientes(); listarInv(); document.getElementById('p_c').value=pre.c; document.getElementById('p_b').value=pre.b; }
-    function guardarPrecios(){ pre.c=document.getElementById('p_c').value; pre.b=document.getElementById('p_b').value; save(); alert("Precios OK"); }
-    function exportar(){ const b=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="manuel_salon.json"; a.click(); }
+    function save(){ localStorage.setItem('ms_v', JSON.stringify(vts)); localStorage.setItem('ms_l', JSON.stringify(cls)); localStorage.setItem('ms_i', JSON.stringify(inv)); }
+    function render(){ stats(); listarClientes(); listarInv(); }
+    function exportar(){ const b=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="manuel_salon_backup.json"; a.click(); }
     render();
 </script>
 </body>
