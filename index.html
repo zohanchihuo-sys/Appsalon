@@ -3,25 +3,156 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Barber Pro Elite</title>
+    <title>Barber Pro</title>
     <style>
-        :root { --oro: #d4af37; --dark: #121212; --card: #1e1e1e; --red: #ff4d4d; --warn: #ffa500; --green: #2ecc71; }
-        body { font-family: sans-serif; background: var(--dark); color: white; margin: 0; padding: 10px; padding-bottom: 60px; }
-        .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 12px; border: 1px solid #333; }
-        h2 { color: var(--oro); text-align: center; margin: 0 0 10px 0; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; }
-        .grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 12px; }
-        .btn-q { background: #252525; color: var(--oro); border: 1px solid var(--oro); padding: 12px 2px; border-radius: 6px; font-size: 10px; font-weight: bold; }
-        input, select { width: 100%; padding: 12px; margin: 4px 0; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-main { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; font-size: 14px; cursor: pointer; }
-        .item { padding: 12px; border-radius: 10px; margin-bottom: 8px; background: #222; border-left: 5px solid #444; font-size: 13px; position: relative; }
-        .btn-del { background: var(--red); color: white; border: none; padding: 6px 10px; border-radius: 6px; float: right; }
-        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; background: #333; padding: 8px; border-radius: 10px; margin-top: 10px; }
-        .cal-d { background: #1e1e1e; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 6px; cursor: pointer; }
-        .has-c { border: 1.5px solid var(--oro); color: var(--oro); }
+        :root { --oro: #d4af37; --bg: #121212; --card: #1e1e1e; --verde: #2ecc71; --rojo: #e74c3c; }
+        body { font-family: sans-serif; background: var(--bg); color: white; margin: 0; padding: 15px; padding-bottom: 80px; }
+        .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #333; }
+        h2 { color: var(--oro); text-align: center; margin: 0 0 15px 0; font-size: 1rem; border-bottom: 1px solid #333; padding-bottom: 10px; }
+        input { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #444; background: #2a2a2a; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; font-size: 14px; cursor: pointer; margin-top: 10px; }
+        .btn-q { background: #252525; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 6px; font-size: 11px; font-weight: bold; }
+        .grid-q { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 10px; }
+        .stats { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 15px; }
+        .stat-box { background: #111; padding: 10px; border-radius: 8px; text-align: center; border: 1px solid #333; }
+        .stat-box small { display: block; color: #888; font-size: 10px; }
+        .stat-box b { color: var(--verde); font-size: 14px; }
+        .item { background: #252525; padding: 12px; border-radius: 8px; margin-bottom: 8px; border-left: 4px solid var(--oro); position: relative; }
+        .btn-wa { background: #25d366; color: white; border: none; padding: 6px 12px; border-radius: 6px; text-decoration: none; display: inline-block; margin-top: 8px; font-size: 12px; }
+        .alerta { color: #ffa500; font-size: 11px; font-weight: bold; margin-top: 5px; }
+        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin-top: 10px; }
+        .cal-d { background: #252525; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 4px; border: 1px solid #333; }
+        .has-c { border: 1px solid var(--oro); color: var(--oro); }
         .sel-d { background: var(--oro) !important; color: black !important; }
-        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; margin-top: 12px; }
-        .stat-box { background: #111; padding: 8px 2px; border-radius: 8px; border: 1px solid #333; text-align: center; }
-        .stat-box small { font-size: 8px; color: #888; display: block; }
-        .stat-box b { color: var(--green); font-size: 11px; }
-        .utilidad { background: rgba(46, 204
-      
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h2>📅 AGENDA</h2>
+        <input type="text" id="cn" placeholder="Nombre Cliente">
+        <div style="display:flex; gap:5px;"><input type="date" id="cf" style="flex:2;"><input type="time" id="ch" style="flex:1;"></div>
+        <button class="btn-m" onclick="agendar()">AGENDAR CITA</button>
+        <div id="calendario" class="cal"></div>
+        <div id="listaCitas" style="margin-top:15px"></div>
+    </div>
+
+    <div class="card">
+        <h2>💈 REGISTRO DE VENTA</h2>
+        <div class="grid-q">
+            <button class="btn-q" onclick="setM(200)">CORTE</button>
+            <button class="btn-q" onclick="setM(150)">BARBA</button>
+            <button class="btn-q" onclick="setM(300)">COMBO</button>
+        </div>
+        <input type="text" id="vn" placeholder="Nombre">
+        <input type="tel" id="vt" placeholder="WhatsApp (Ej: 521...)">
+        <input type="number" id="vm" placeholder="Monto $">
+        <button class="btn-m" onclick="vender()">GUARDAR VENTA</button>
+        
+        <div class="stats">
+            <div class="stat-box"><small>Hoy</small><b id="sD">$0</b></div>
+            <div class="stat-box"><small>Mes</small><b id="sM">$0</b></div>
+        </div>
+        <div id="utilidad" style="text-align:center; margin-top:10px; color:var(--verde); font-weight:bold; font-size:12px;"></div>
+    </div>
+
+    <div class="card">
+        <h2>💸 GASTOS</h2>
+        <input type="text" id="gn" placeholder="Concepto">
+        <input type="number" id="gm" placeholder="Monto $">
+        <button class="btn-m" onclick="gastar()" style="background:#333; color:white;">REGISTRAR GASTO</button>
+    </div>
+
+    <input type="text" id="bus" placeholder="🔍 Buscar cliente..." onkeyup="listarClientes()" style="margin-bottom:15px">
+    <div id="clientes"></div>
+
+    <div style="text-align:center;">
+        <button onclick="exportar()" style="background:none; border:1px solid #444; color:#888; padding:10px; border-radius:8px; font-size:10px;">DESCARGAR RESPALDO</button>
+    </div>
+
+<script>
+    let vts = JSON.parse(localStorage.getItem('b_v')) || [];
+    let cts = JSON.parse(localStorage.getItem('b_c')) || [];
+    let cls = JSON.parse(localStorage.getItem('b_l')) || [];
+    let gst = JSON.parse(localStorage.getItem('b_g')) || [];
+    let fSel = new Date().toISOString().split('T')[0];
+
+    function render() {
+        drawCal(); listarCitas(); listarClientes(); stats();
+    }
+
+    function setM(n) { document.getElementById('vm').value = n; }
+
+    function agendar() {
+        const n=document.getElementById('cn').value, f=document.getElementById('cf').value, h=document.getElementById('ch').value;
+        if(n&&f&&h) { cts.push({n,f,h,id:Date.now()}); save(); render(); document.getElementById('cn').value=""; }
+    }
+
+    function vender() {
+        const n=document.getElementById('vn').value, t=document.getElementById('vt').value, m=parseFloat(document.getElementById('vm').value);
+        if(n && m) {
+            vts.push({m, f:new Date().toLocaleDateString(), id:Date.now()});
+            let i=cls.findIndex(c=>c.t===t);
+            if(i>-1) { cls[i].p+=Math.floor(m/10); cls[i].u=Date.now(); }
+            else if(t) { cls.push({n, t, p:Math.floor(m/10), u:Date.now()}); }
+            save(); render(); alert("Venta Exitosa");
+            document.getElementById('vn').value=""; document.getElementById('vt').value=""; document.getElementById('vm').value="";
+        }
+    }
+
+    function gastar() {
+        const n=document.getElementById('gn').value, m=parseFloat(document.getElementById('gm').value);
+        if(n && m) { gst.push({m, id:Date.now()}); save(); render(); alert("Gasto Guardado"); document.getElementById('gn').value=""; document.getElementById('gm').value=""; }
+    }
+
+    function stats() {
+        const hoy = new Date().toLocaleDateString();
+        let d=0, m=0, gM=0;
+        vts.forEach(v=>{ if(v.f===hoy) d+=v.m; m+=v.m; });
+        gst.forEach(g=>{ gM+=g.m; });
+        document.getElementById('sD').innerText='$'+d;
+        document.getElementById('sM').innerText='$'+m;
+        document.getElementById('utilidad').innerText='GANANCIA LIMPIA: $'+(m-gM);
+    }
+
+    function listarClientes() {
+        const div=document.getElementById('clientes'), bus=document.getElementById('bus').value.toLowerCase();
+        div.innerHTML="";
+        cls.filter(c=>c.n.toLowerCase().includes(bus)).forEach(c=>{
+            let dias = Math.floor((Date.now()-c.u)/86400000);
+            let alerta = dias>=20 ? `<div class="alerta">⚠️ ${dias} DÍAS SIN VENIR</div>` : '';
+            div.innerHTML+=`<div class="item"><b>${c.n}</b> - ${c.p} PTS ${alerta} <a href="https://wa.me/${c.t}" class="btn-wa">WhatsApp</a></div>`;
+        });
+    }
+
+    function drawCal() {
+        const cont=document.getElementById('calendario'); cont.innerHTML="";
+        const h=new Date(); const ult=new Date(h.getFullYear(), h.getMonth()+1, 0).getDate();
+        for(let i=1; i<=ult; i++) {
+            let f=`${h.getFullYear()}-${String(h.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            let has=cts.some(c=>c.f===f)?'has-c':'';
+            let sel=f===fSel?'sel-d':'';
+            cont.innerHTML+=`<div class="cal-d ${has} ${sel}" onclick="fSel='${f}';render()">${i}</div>`;
+        }
+    }
+
+    function listarCitas() {
+        const div=document.getElementById('listaCitas'); div.innerHTML="";
+        cts.filter(c=>c.f===fSel).forEach(c=>{ div.innerHTML+=`<div class="item"><b>${c.h}</b> ${c.n}</div>`; });
+    }
+
+    function save() {
+        localStorage.setItem('b_v', JSON.stringify(vts));
+        localStorage.setItem('b_c', JSON.stringify(cts));
+        localStorage.setItem('b_l', JSON.stringify(cls));
+        localStorage.setItem('b_g', JSON.stringify(gst));
+    }
+
+    function exportar() {
+        const blob=new Blob([JSON.stringify(localStorage)],{type:"application/json"});
+        const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="respaldo.json"; a.click();
+    }
+    render();
+</script>
+</body>
+</html>
