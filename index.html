@@ -3,86 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manuel Salón - Enterprise Pro</title>
+    <title>Manuel Salón Pro - Control Total</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; --p: #9b59b6; }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #eee; margin: 0; overflow-x: hidden; }
+        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #eee; margin: 0; padding: 10px; }
         
-        /* HEADER PROFESIONAL */
-        header { background: #000; padding: 15px; border-bottom: 2px solid var(--oro); display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
-        .menu-icon { font-size: 26px; color: var(--oro); cursor: pointer; margin-right: 15px; }
-        .brand { color: var(--oro); font-weight: bold; letter-spacing: 2px; text-transform: uppercase; font-size: 1.1rem; }
+        /* BOTONES PRINCIPALES SIEMPRE VISIBLES */
+        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; position: sticky; top: 0; z-index: 1000; background: var(--bg); padding-bottom: 10px; }
+        .tab-btn { background: #222; color: #fff; border: 1px solid #444; padding: 10px 2px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .tab-btn.active { background: var(--oro); color: #000; border-color: var(--oro); }
 
-        /* MENÚ LATERAL */
-        .nav-drawer { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: #111; z-index: 200; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--oro); }
-        .nav-drawer.active { left: 0; }
-        .nav-item { padding: 18px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; text-decoration: none; cursor: pointer; font-size: 14px; font-weight: 600; }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 150; }
-        .overlay.active { display: block; }
-
-        /* CONTENEDORES */
-        .content { padding: 15px; display: none; animation: fadeIn 0.3s; }
+        .content { display: none; padding-top: 10px; }
         .content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
         .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #252525; }
-        h2 { color: var(--oro); font-size: 0.85rem; text-transform: uppercase; text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; }
+        h2 { color: var(--oro); font-size: 1rem; text-align: center; margin-top: 0; }
 
         /* CALENDARIO */
-        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 15px; }
-        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 6px; border: 1px solid #333; cursor: pointer; }
-        .has-c { border: 1px solid var(--oro); color: var(--oro); font-weight: bold; }
-        .sel-d { background: var(--oro) !important; color: black !important; }
+        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 10px 0; }
+        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 4px; border: 1px solid #333; }
+        .has-c { border: 1px solid var(--oro); color: var(--oro); }
+        .sel-d { background: var(--oro) !important; color: #000 !important; }
 
-        /* ELEMENTOS FORMULARIO */
-        input, select, textarea { width: 100%; padding: 12px; margin: 6px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; margin-top: 5px; transition: 0.2s; }
-        .btn-m:active { transform: scale(0.98); opacity: 0.8; }
-        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
-        .btn-fast { background: #222; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+        /* INPUTS Y BOTONES */
+        input, select { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; cursor: pointer; margin-top: 5px; }
+        .btn-fast { background: #333; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; font-size: 11px; font-weight: bold; }
 
-        /* LISTAS E HISTORIAL */
-        .item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--oro); position: relative; }
-        .hist-box { background: #000; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 12px; border-left: 2px solid var(--p); color: #bbb; }
-        .badge { background: #333; color: var(--oro); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
-        .btn-action { padding: 8px; border-radius: 6px; border: none; font-size: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-        
-        #reader { width: 100%; border-radius: 12px; overflow: hidden; display: none; border: 2px solid var(--oro); margin-bottom: 10px; }
+        .item { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--oro); }
+        .badge { background: #333; color: var(--oro); padding: 2px 5px; border-radius: 4px; font-size: 10px; }
     </style>
 </head>
 <body>
 
-    <header>
-        <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        <div class="brand">MANUEL SALÓN PRO</div>
-    </header>
-
-    <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
-
-    <nav class="nav-drawer" id="drawer">
-        <div style="padding:20px; text-align:center; background:#000;"><b style="color:var(--oro)">MENÚ DE CONTROL</b></div>
-        <div class="nav-item" onclick="showSec('sec-agenda')">📅 AGENDA Y CITAS</div>
-        <div class="nav-item" onclick="showSec('sec-ventas')">💰 COBRAR / CAJA</div>
-        <div class="nav-item" onclick="showSec('sec-cls')">👥 CLIENTES / TINTES</div>
-        <div class="nav-item" onclick="showSec('sec-inv')">📦 INVENTARIO SCAN</div>
-        <div class="nav-item" onclick="showSec('sec-config')">⚙️ CONFIGURACIÓN</div>
-        <div class="nav-item" onclick="exportar()" style="color:var(--a)">💾 RESPALDO TOTAL</div>
-    </nav>
-
-    <div id="scanner-cont" style="padding: 0 15px;">
-        <div id="reader"></div>
-        <button id="btn-stop" class="btn-m" style="display:none; background:var(--r); color:white; margin-bottom:10px;" onclick="stopScan()">CERRAR CÁMARA</button>
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'sec-agenda')">📅 CITAS</button>
+        <button class="tab-btn" onclick="openTab(event, 'sec-ventas')">💰 CAJA</button>
+        <button class="tab-btn" onclick="openTab(event, 'sec-cls')">👥 CLIENTES</button>
+        <button class="tab-btn" onclick="openTab(event, 'sec-config')">⚙️ AJUSTES</button>
     </div>
 
     <div id="sec-agenda" class="content active">
         <div class="card">
-            <h2 id="t-cita">NUEVA CITA</h2>
-            <input type="hidden" id="edit-cita-id">
+            <h2>+ AGENDAR CITA</h2>
+            <input type="text" id="a-nom" placeholder="Cliente">
             <select id="a-barb" class="staff-select"></select>
-            <input type="text" id="a-nom" placeholder="Nombre del Cliente">
             <div style="display:flex; gap:5px;"><input type="date" id="a-fec"><input type="time" id="a-hor"></div>
-            <button class="btn-m" onclick="agendar()">GUARDAR EN AGENDA</button>
-            <button id="btn-c-cita" class="btn-m" style="display:none; background:#444; color:white;" onclick="limpiarCita()">CANCELAR EDICIÓN</button>
+            <button class="btn-m" onclick="agendar()">GUARDAR CITA</button>
         </div>
         <div class="cal" id="calendario"></div>
         <div id="listaCitas"></div>
@@ -90,52 +58,36 @@
 
     <div id="sec-ventas" class="content">
         <div class="card" style="text-align:center">
-            <small>INGRESOS DE HOY</small><h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
+            <small>INGRESOS HOY</small>
+            <h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
             <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div style="background:#000; padding:10px; border-radius:8px;"><small id="nP1">P1</small><br><b id="sB1">$0</b></div>
-                <div style="background:#000; padding:10px; border-radius:8px;"><small id="nP2">P2</small><br><b id="sB2">$0</b></div>
+                <div style="background:#000; padding:5px; border-radius:5px;"><small id="nP1"></small><br><b id="sB1">$0</b></div>
+                <div style="background:#000; padding:5px; border-radius:5px;"><small id="nP2"></small><br><b id="sB2">$0</b></div>
             </div>
         </div>
         <div class="card">
-            <h2>COBRAR SERVICIO / PRODUCTO</h2>
-            <div class="grid-buttons">
+            <h2>COBRAR</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:10px;">
                 <button class="btn-fast" onclick="rápido('cab')">CABA.</button>
                 <button class="btn-fast" onclick="rápido('dam')">DAMA</button>
                 <button class="btn-fast" onclick="rápido('nin')">NIÑO</button>
                 <button class="btn-fast" onclick="rápido('pla')">PLANCHADO</button>
             </div>
-            <button class="btn-scan" onclick="startScan('venta')">📷 ESCANEAR PRODUCTO</button>
             <select id="v-barb" class="staff-select"></select>
-            <input type="text" id="v-nom" placeholder="Cliente">
             <input type="number" id="v-mon" placeholder="Monto $">
-            <button class="btn-m" onclick="vender()">REGISTRAR COBRO</button>
+            <button class="btn-m" onclick="vender()">REGISTRAR VENTA</button>
         </div>
     </div>
 
     <div id="sec-cls" class="content">
         <div class="card">
-            <h2 id="t-cls">+ REGISTRAR CLIENTE</h2>
-            <input type="hidden" id="edit-cl-id">
-            <input type="text" id="c-nom" placeholder="Nombre y Apellido">
+            <h2>NUEVO CLIENTE / TINTES</h2>
+            <input type="text" id="c-nom" placeholder="Nombre">
             <input type="tel" id="c-tel" placeholder="WhatsApp">
-            <button class="btn-m" onclick="guardarCliente()">GUARDAR CLIENTE</button>
-            <button id="btn-c-cl" class="btn-m" style="display:none; background:#444; color:white;" onclick="limpiarCl()">CANCELAR</button>
+            <button class="btn-m" onclick="guardarCl()">GUARDAR</button>
         </div>
-        <input type="text" id="bus" placeholder="🔍 Buscar cliente o tratamiento..." onkeyup="listarClientes()">
-        <div id="listaClientes" style="margin-top:15px"></div>
-    </div>
-
-    <div id="sec-inv" class="content">
-        <div class="card">
-            <h2>ENTRADA DE STOCK</h2>
-            <button class="btn-scan" onclick="startScan('stock')">📷 ESCANEAR CÓDIGO</button>
-            <input type="text" id="i-cod" placeholder="Código de Barras">
-            <input type="text" id="i-nom" placeholder="Nombre Producto">
-            <input type="number" id="i-can" placeholder="Cantidad">
-            <input type="number" id="i-pre" placeholder="Precio Venta $">
-            <button class="btn-m" onclick="addInv()">GUARDAR EN STOCK</button>
-        </div>
-        <div id="listaInv"></div>
+        <input type="text" id="bus" placeholder="🔍 Buscar cliente..." onkeyup="render()">
+        <div id="listaClientes"></div>
     </div>
 
     <div id="sec-config" class="content">
@@ -143,156 +95,103 @@
             <h2>PELUQUEROS</h2>
             <input type="text" id="p1-n" placeholder="Nombre Peluquero 1">
             <input type="text" id="p2-n" placeholder="Nombre Peluquero 2">
-            <button class="btn-m" onclick="guardarConfig()">ACTUALIZAR STAFF</button>
+            <button class="btn-m" onclick="saveStaff()">GUARDAR STAFF</button>
         </div>
         <div class="card">
-            <h2>PRECIOS DE SERVICIOS</h2>
+            <h2>PRECIOS</h2>
             <small>Caballero:</small><input type="number" id="pr-cab">
             <small>Dama:</small><input type="number" id="pr-dam">
-            <small>Niño:</small><input type="number" id="pr-nin">
-            <small>Planchado:</small><input type="number" id="pr-pla">
-            <button class="btn-m" onclick="guardarConfig()">ACTUALIZAR PRECIOS</button>
+            <button class="btn-m" onclick="savePrecios()">GUARDAR PRECIOS</button>
         </div>
+        <button class="btn-m" style="background:var(--a); color:#fff" onclick="exportar()">💾 RESPALDO TOTAL</button>
     </div>
 
 <script>
-    // --- BASE DE DATOS BLINDADA ---
-    let db_v = JSON.parse(localStorage.getItem('MS_V5_VENTAS')) || [];
-    let db_c = JSON.parse(localStorage.getItem('MS_V5_CITAS')) || [];
-    let db_l = JSON.parse(localStorage.getItem('MS_V5_CLIENTES')) || [];
-    let db_i = JSON.parse(localStorage.getItem('MS_V5_STOCK')) || [];
-    let db_s = JSON.parse(localStorage.getItem('MS_V5_STAFF')) || {p1:"Manuel", p2:"Peluquero 2"};
-    let db_p = JSON.parse(localStorage.getItem('MS_V5_PRECIOS')) || {cab:150, dam:250, nin:120, pla:200};
-    
+    let db_v = JSON.parse(localStorage.getItem('M_V')) || [];
+    let db_c = JSON.parse(localStorage.getItem('M_C')) || [];
+    let db_l = JSON.parse(localStorage.getItem('M_L')) || [];
+    let db_s = JSON.parse(localStorage.getItem('M_S')) || {p1:"Manuel", p2:"Socio"};
+    let db_p = JSON.parse(localStorage.getItem('M_P')) || {cab:150, dam:250, nin:100, pla:200};
     let fechaSel = new Date().toISOString().split('T')[0];
-    let html5QrCode;
+
+    function openTab(evt, tabName) {
+        let contents = document.getElementsByClassName("content");
+        for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+        let buttons = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+        render();
+    }
 
     function save() {
-        localStorage.setItem('MS_V5_VENTAS', JSON.stringify(db_v));
-        localStorage.setItem('MS_V5_CITAS', JSON.stringify(db_c));
-        localStorage.setItem('MS_V5_CLIENTES', JSON.stringify(db_l));
-        localStorage.setItem('MS_V5_STOCK', JSON.stringify(db_i));
-        localStorage.setItem('MS_V5_STAFF', JSON.stringify(db_s));
-        localStorage.setItem('MS_V5_PRECIOS', JSON.stringify(db_p));
+        localStorage.setItem('M_V', JSON.stringify(db_v));
+        localStorage.setItem('M_C', JSON.stringify(db_c));
+        localStorage.setItem('M_L', JSON.stringify(db_l));
+        localStorage.setItem('M_S', JSON.stringify(db_s));
+        localStorage.setItem('M_P', JSON.stringify(db_p));
     }
 
-    // --- NAVEGACIÓN ---
-    function toggleMenu() { document.getElementById('drawer').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
-    function showSec(id) { 
-        document.querySelectorAll('.content').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        toggleMenu(); stopScan(); render(); 
+    function saveStaff() { db_s.p1=document.getElementById('p1-n').value; db_s.p2=document.getElementById('p2-n').value; save(); render(); alert("Staff Guardado"); }
+    function savePrecios() { db_p.cab=document.getElementById('pr-cab').value; db_p.dam=document.getElementById('pr-dam').value; save(); alert("Precios Guardados"); }
+    function agendar() { 
+        const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value;
+        if(n&&f&&h){ db_c.push({n,f,h,b,id:Date.now()}); save(); render(); alert("Cita Agendada"); }
     }
-
-    // --- LÓGICA ESCÁNER ---
-    function startScan(modo) {
-        document.getElementById('reader').style.display='block'; document.getElementById('btn-stop').style.display='block';
-        html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start({facingMode:"environment"}, {fps:10, qrbox:250}, (txt) => {
-            if(modo==='stock') { 
-                document.getElementById('i-cod').value=txt; 
-                let p=db_i.find(x=>x.cod===txt); if(p){document.getElementById('i-nom').value=p.nom; document.getElementById('i-pre').value=p.pre;}
-            } else {
-                let p=db_i.find(x=>x.cod===txt); 
-                if(p){document.getElementById('v-nom').value=p.nom; document.getElementById('v-mon').value=p.pre;} else alert("Producto no registrado");
-            }
-            stopScan();
-        }).catch(e=>console.log(e));
-    }
-    function stopScan() { if(html5QrCode){ html5QrCode.stop().then(()=>{document.getElementById('reader').style.display='none'; document.getElementById('btn-stop').style.display='none';}); } }
-
-    // --- AGENDA, CAMBIOS Y CANCELACIONES ---
-    function agendar() {
-        const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value, id=document.getElementById('edit-cita-id').value;
-        if(!n || !f || !h) return alert("Completa los datos");
-        if(id) { let i=db_c.findIndex(x=>x.id==id); db_c[i]={n,f,h,b,id:parseInt(id)}; }
-        else { db_c.push({n,f,h,b,id:Date.now()}); }
-        save(); limpiarCita(); render(); alert("Agenda actualizada");
-    }
-    function prepararCita(id) {
-        const c=db_c.find(x=>x.id===id); document.getElementById('edit-cita-id').value=c.id; document.getElementById('a-nom').value=c.n; document.getElementById('a-fec').value=c.f; document.getElementById('a-hor').value=c.h; document.getElementById('a-barb').value=c.b;
-        document.getElementById('t-cita').innerText="🔄 CAMBIAR CITA"; document.getElementById('btn-c-cita').style.display="block"; window.scrollTo(0,0);
-    }
-    function limpiarCita() { document.getElementById('edit-cita-id').value=""; document.getElementById('a-nom').value=""; document.getElementById('t-cita').innerText="NUEVA CITA"; document.getElementById('btn-c-cita').style.display="none"; }
-
-    // --- CLIENTES, EDICIÓN Y TINTES ---
-    function guardarCliente() {
-        const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value, id=document.getElementById('edit-cl-id').value;
-        if(!n) return;
-        if(id) { let i=db_l.findIndex(x=>x.id==id); db_l[i].n=n; db_l[i].t=t; }
-        else { db_l.push({n,t,h:[],id:Date.now()}); }
-        save(); limpiarCl(); render(); alert("Cliente guardado");
-    }
-    function prepararCl(id) {
-        const c=db_l.find(x=>x.id===id); document.getElementById('edit-cl-id').value=c.id; document.getElementById('c-nom').value=c.n; document.getElementById('c-tel').value=c.t;
-        document.getElementById('t-cls').innerText="✏️ EDITAR CLIENTE"; document.getElementById('btn-c-cl').style.display="block"; window.scrollTo(0,0);
-    }
-    function limpiarCl() { document.getElementById('edit-cl-id').value=""; document.getElementById('c-nom').value=""; document.getElementById('c-tel').value=""; document.getElementById('t-cls').innerText="+ REGISTRAR CLIENTE"; document.getElementById('btn-c-cl').style.display="none"; }
-    function addTinte(id) { const txt=prompt("Fórmula/Tinte:"); if(txt){ let i=db_l.findIndex(x=>x.id===id); db_l[i].h.unshift({f:new Date().toLocaleDateString(), t:txt}); save(); render(); } }
-
-    // --- CAJA Y CONFIG ---
     function rápido(t) { document.getElementById('v-mon').value = db_p[t]; }
     function vender() {
-        const m=parseFloat(document.getElementById('v-mon').value), b=document.getElementById('v-barb').value, n=document.getElementById('v-nom').value;
-        if(m) { db_v.push({m,b,f:new Date().toLocaleDateString(), n}); save(); render(); alert("Cobro registrado"); document.getElementById('v-mon').value=""; document.getElementById('v-nom').value=""; }
+        const m=parseFloat(document.getElementById('v-mon').value), b=document.getElementById('v-barb').value;
+        if(m){ db_v.push({m,b,f:new Date().toLocaleDateString()}); save(); render(); alert("Venta OK"); }
     }
-    function guardarConfig() {
-        db_s.p1 = document.getElementById('p1-n').value || db_s.p1; db_s.p2 = document.getElementById('p2-n').value || db_s.p2;
-        db_p.cab = document.getElementById('pr-cab').value; db_p.dam = document.getElementById('pr-dam').value; db_p.nin = document.getElementById('pr-nin').value; db_p.pla = document.getElementById('pr-pla').value;
-        save(); render(); alert("Configuración guardada");
+    function guardarCl() { 
+        const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value;
+        if(n){ db_l.push({n,t,h:[],id:Date.now()}); save(); render(); alert("Cliente Guardado"); }
     }
-    function addInv() {
-        const cod=document.getElementById('i-cod').value, nom=document.getElementById('i-nom').value, can=parseInt(document.getElementById('i-can').value), pre=document.getElementById('i-pre').value;
-        if(nom && can) {
-            let i=db_i.findIndex(x=>x.cod===cod && cod!=="");
-            if(i>-1){db_i[i].can+=can; db_i[i].pre=pre;} else {db_i.push({cod,nom,can,pre,id:Date.now()});}
-            save(); render(); alert("Inventario actualizado");
-        }
+    function addTinte(id) { 
+        const t=prompt("Fórmula:"); if(t){ let i=db_l.findIndex(x=>x.id===id); db_l[i].h.unshift({f:new Date().toLocaleDateString(), t}); save(); render(); } 
     }
 
-    // --- RENDERIZADO DINÁMICO ---
     function render() {
-        // Stats
-        const hoy=new Date().toLocaleDateString(); let b1=0, b2=0, t=0;
-        db_v.forEach(v=>{ if(v.f===hoy){ if(v.b==='P1' || v.b===db_s.p1) b1+=v.m; else b2+=v.m; t+=v.m; } });
-        document.getElementById('sB1').innerText='$'+b1; document.getElementById('sB2').innerText='$'+b2; document.getElementById('tH').innerText='$'+t;
-        document.getElementById('nP1').innerText=db_s.p1; document.getElementById('nP2').innerText=db_s.p2;
-        
+        // Update Nombres
+        document.getElementById('nP1').innerText = db_s.p1; document.getElementById('nP2').innerText = db_s.p2;
+        document.getElementById('p1-n').value = db_s.p1; document.getElementById('p2-n').value = db_s.p2;
+        document.getElementById('pr-cab').value = db_p.cab; document.getElementById('pr-dam').value = db_p.dam;
+
         // Selects
-        const s=document.querySelectorAll('.staff-select'); s.forEach(x=>{ x.innerHTML=`<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`; });
-        
-        // Calendario y Citas
-        const cal=document.getElementById('calendario'); cal.innerHTML="";
-        const d=new Date(); const ult=new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+        const selects = document.querySelectorAll('.staff-select');
+        selects.forEach(s => s.innerHTML = `<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`);
+
+        // Caja
+        const hoy = new Date().toLocaleDateString(); let t=0, b1=0, b2=0;
+        db_v.forEach(v => { if(v.f===hoy){ t+=v.m; if(v.b===db_s.p1) b1+=v.m; else b2+=v.m; } });
+        document.getElementById('tH').innerText = "$"+t; document.getElementById('sB1').innerText = "$"+b1; document.getElementById('sB2').innerText = "$"+b2;
+
+        // Cal
+        const cal = document.getElementById('calendario'); cal.innerHTML = "";
+        const d = new Date(); const ult = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
         for(let i=1; i<=ult; i++){
-            let f=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
-            let has=db_c.some(x=>x.f===f)?'has-c':''; let sel=f===fechaSel?'sel-d':'';
-            cal.innerHTML+=`<div class="cal-d ${has} ${sel}" onclick="fechaSel='${f}';render()">${i}</div>`;
+            let f = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            let has = db_c.some(x=>x.f===f)?'has-c':''; let sel = f===fechaSel?'sel-d':'';
+            cal.innerHTML += `<div class="cal-d ${has} ${sel}" onclick="fechaSel='${f}';render()">${i}</div>`;
         }
-        const lC=document.getElementById('listaCitas'); lC.innerHTML=`<small style="color:var(--oro)">Citas para ${fechaSel}:</small>`;
-        db_c.filter(x=>x.f===fechaSel).sort((a,b)=>a.h.localeCompare(b.h)).forEach(c=>{
-            lC.innerHTML+=`<div class="item"><span class="badge">${c.b} | ${c.h} HS</span><br><b>${c.n}</b><br>
-            <button class="btn-action" style="background:var(--a); color:white" onclick="prepararCita(${c.id})">CAMBIAR</button>
-            <button class="btn-action" style="background:var(--r); color:white" onclick="if(confirm('¿Cancelar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render();}">ELIMINAR</button></div>`;
+
+        // List Citas
+        const lc = document.getElementById('listaCitas'); lc.innerHTML = "";
+        db_c.filter(x=>x.f===fechaSel).forEach(c => {
+            lc.innerHTML += `<div class="item"><span class="badge">${c.h} | ${c.b}</span><br><b>${c.n}</b><br><button onclick="if(confirm('Borrar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render()}" style="color:red;background:none;border:none;font-size:10px;">ELIMINAR</button></div>`;
         });
 
-        // Clientes
-        const lCl=document.getElementById('listaClientes'), bus=document.getElementById('bus').value.toLowerCase(); lCl.innerHTML="";
-        db_l.filter(x=>x.n.toLowerCase().includes(bus) || x.h.some(h=>h.t.toLowerCase().includes(bus))).forEach(c=>{
-            let hH=c.h.map(h=>`<div class="hist-box"><b>${h.f}:</b> ${h.t}</div>`).join('');
-            lCl.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small>${hH}<br>
-            <button class="btn-action" style="background:var(--p); color:white" onclick="addTinte(${c.id})">+ TINTE</button>
-            <button class="btn-action" style="background:var(--v); color:black" onclick="prepararCl(${c.id})">EDITAR</button>
-            <button class="btn-action" style="background:var(--r); color:white" onclick="if(confirm('¿Borrar cliente?')){db_l=db_l.filter(x=>x.id!==${c.id});save();render();}">X</button></div>`;
+        // List Clientes
+        const lcl = document.getElementById('listaClientes'), b=document.getElementById('bus').value.toLowerCase(); lcl.innerHTML="";
+        db_l.filter(x=>x.n.toLowerCase().includes(b)).forEach(c => {
+            let h = c.h.map(x=>`<div style="font-size:10px;color:gray;">${x.f}: ${x.t}</div>`).join('');
+            lcl.innerHTML += `<div class="item"><b>${c.n}</b><br>${h}<button onclick="addTinte(${c.id})" style="background:var(--oro);border:none;border-radius:4px;font-size:10px;padding:4px;margin-top:5px;">+ TINTE</button></div>`;
         });
-
-        // Inventario
-        const lI=document.getElementById('listaInv'); lI.innerHTML="";
-        db_i.forEach(x=>{ lI.innerHTML+=`<div class="item" style="border-left-color:var(--a)"><b>${x.nom}</b> (${x.can} pzs) - $${x.pre}<br><small>CÓD: ${x.cod}</small><button class="btn-del" onclick="db_i=db_i.filter(i=>i.id!==${x.id});save();render()">X</button></div>`; });
-
-        // Config
-        document.getElementById('p1-n').value=db_s.p1; document.getElementById('p2-n').value=db_s.p2;
-        document.getElementById('pr-cab').value=db_p.cab; document.getElementById('pr-dam').value=db_p.dam; document.getElementById('pr-nin').value=db_p.nin; document.getElementById('pr-pla').value=db_p.pla;
     }
 
-    function exportar(){ const b=ne
+    function exportar(){ const blob = new Blob([JSON.stringify(localStorage)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "salon_backup.json"; a.click(); }
+
+    render();
+</script>
+</body>
+</html>
