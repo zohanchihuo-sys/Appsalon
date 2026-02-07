@@ -1,619 +1,197 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Mi Salón PRO (2 personas)</title>
-  <style>
-    :root{
-      --bg:#0b0b0f;
-      --card:#141422;
-      --card2:#10101a;
-      --text:#f2f2f7;
-      --muted:#b8b8c7;
-      --gold:#d4af37;
-      --bad:#ff5a67;
-      --ok:#33d17a;
-      --line:rgba(255,255,255,.08);
-      --shadow: 0 10px 30px rgba(0,0,0,.35);
-      --radius:18px;
-      --radius2:14px;
-    }
-    *{box-sizing:border-box}
-    body{
-      margin:0;
-      font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,Helvetica,sans-serif;
-      background: radial-gradient(1200px 800px at 20% -20%, rgba(212,175,55,.18), transparent 55%),
-                  radial-gradient(900px 700px at 120% 10%, rgba(120,70,255,.15), transparent 55%),
-                  var(--bg);
-      color:var(--text);
-    }
-    header{
-      position:sticky; top:0; z-index:10;
-      backdrop-filter: blur(10px);
-      background: rgba(11,11,15,.7);
-      border-bottom:1px solid var(--line);
-    }
-    .wrap{max-width:980px; margin:0 auto; padding:16px}
-    .top{
-      display:flex; gap:12px; align-items:center; justify-content:space-between;
-      padding:10px 0;
-    }
-    .brand{display:flex; align-items:center; gap:10px}
-    .logo{
-      width:40px; height:40px; border-radius:14px;
-      background: linear-gradient(135deg, rgba(212,175,55,.9), rgba(212,175,55,.2));
-      box-shadow: 0 12px 30px rgba(212,175,55,.15);
-      display:grid; place-items:center;
-      color:#0b0b0f; font-weight:900;
-    }
-    .brand h1{font-size:16px; margin:0}
-    .brand p{margin:0; font-size:12px; color:var(--muted)}
-    .tabs{display:flex; gap:8px; flex-wrap:wrap; padding:10px 0 14px}
-    .tab{
-      border:1px solid var(--line);
-      background: rgba(20,20,34,.65);
-      color:var(--muted);
-      padding:10px 12px;
-      border-radius:999px;
-      cursor:pointer;
-      user-select:none;
-      transition:.2s transform, .2s background, .2s color, .2s border;
-      font-size:13px;
-    }
-    .tab.active{
-      background: rgba(212,175,55,.18);
-      border-color: rgba(212,175,55,.45);
-      color:var(--text);
-      transform: translateY(-1px);
-    }
-    main{padding:18px 0 32px}
-    .grid{display:grid; grid-template-columns: 1.15fr .85fr; gap:14px}
-    @media (max-width: 860px){ .grid{grid-template-columns:1fr} }
-    .card{
-      background: linear-gradient(180deg, rgba(20,20,34,.9), rgba(16,16,26,.92));
-      border:1px solid var(--line);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      overflow:hidden;
-    }
-    .card .hd{
-      padding:14px 14px 10px;
-      border-bottom:1px solid var(--line);
-      display:flex; align-items:center; justify-content:space-between; gap:10px;
-    }
-    .card .hd h2{margin:0; font-size:14px}
-    .card .hd .hint{font-size:12px; color:var(--muted)}
-    .card .bd{padding:14px}
-    .row{display:flex; gap:10px; flex-wrap:wrap}
-    .col{flex:1; min-width:180px}
-    label{display:block; font-size:12px; color:var(--muted); margin:0 0 6px}
-    input, select, textarea{
-      width:100%;
-      padding:11px 12px;
-      border-radius: 14px;
-      background: rgba(255,255,255,.05);
-      border:1px solid var(--line);
-      color:var(--text);
-      outline:none;
-    }
-    textarea{min-height:86px; resize:vertical}
-    input::placeholder, textarea::placeholder{color:rgba(242,242,247,.45)}
-    .btns{display:flex; gap:10px; flex-wrap:wrap; margin-top:10px}
-    button{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.06);
-      color: var(--text);
-      padding:11px 12px;
-      border-radius: 999px;
-      cursor:pointer;
-      transition:.18s transform, .18s opacity, .18s background, .18s border;
-      font-size:13px;
-    }
-    button:hover{transform: translateY(-1px)}
-    button:active{transform: translateY(0px); opacity:.9}
-    .primary{ background: rgba(212,175,55,.18); border-color: rgba(212,175,55,.45) }
-    .danger{ background: rgba(255,90,103,.12); border-color: rgba(255,90,103,.35) }
-    .ok{ background: rgba(51,209,122,.12); border-color: rgba(51,209,122,.35) }
-    .muted{color:var(--muted)}
-    .pill{
-      font-size:12px;
-      padding:6px 10px;
-      border-radius:999px;
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      color:var(--muted);
-      white-space:nowrap;
-    }
-    .list{display:flex; flex-direction:column; gap:10px}
-    .item{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      border-radius: var(--radius2);
-      padding:12px;
-      display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:10px;
-    }
-    .item h3{ margin:0 0 4px; font-size:13px; }
-    .item p{ margin:0; font-size:12px; color:var(--muted); line-height:1.35; }
-    .item .meta{ display:flex; gap:6px; flex-wrap:wrap; margin-top:8px; }
-    .actions{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end}
-    .mini{ padding:8px 10px; font-size:12px; border-radius:999px; }
-    .kpis{
-      display:grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap:10px;
-      margin-bottom:12px;
-    }
-    @media (max-width: 520px){ .kpis{grid-template-columns:1fr} }
-    .kpi{
-      border:1px solid var(--line);
-      background: rgba(255,255,255,.04);
-      border-radius: var(--radius2);
-      padding:12px;
-    }
-    .kpi .v{font-size:18px; font-weight:800}
-    .kpi .t{font-size:12px; color:var(--muted)}
-    .sep{height:1px; background:var(--line); margin:12px 0}
-    .note{font-size:12px; color:var(--muted); line-height:1.4}
-    .hidden{display:none !important}
-    .right{display:flex; gap:8px; align-items:center; flex-wrap:wrap; justify-content:flex-end}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Manuel Salón Pro - Control Total</title>
+    <script src="https://unpkg.com/html5-qrcode"></script>
+    <style>
+        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #eee; margin: 0; padding: 10px; }
+        
+        /* BOTONES PRINCIPALES SIEMPRE VISIBLES */
+        .tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 5px; position: sticky; top: 0; z-index: 1000; background: var(--bg); padding-bottom: 10px; }
+        .tab-btn { background: #222; color: #fff; border: 1px solid #444; padding: 10px 2px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; text-transform: uppercase; }
+        .tab-btn.active { background: var(--oro); color: #000; border-color: var(--oro); }
+
+        .content { display: none; padding-top: 10px; }
+        .content.active { display: block; }
+        
+        .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #252525; }
+        h2 { color: var(--oro); font-size: 1rem; text-align: center; margin-top: 0; }
+
+        /* CALENDARIO */
+        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; margin: 10px 0; }
+        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 11px; border-radius: 4px; border: 1px solid #333; }
+        .has-c { border: 1px solid var(--oro); color: var(--oro); }
+        .sel-d { background: var(--oro) !important; color: #000 !important; }
+
+        /* INPUTS Y BOTONES */
+        input, select { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; cursor: pointer; margin-top: 5px; }
+        .btn-fast { background: #333; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; font-size: 11px; font-weight: bold; }
+
+        .item { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 8px; border-left: 4px solid var(--oro); }
+        .badge { background: #333; color: var(--oro); padding: 2px 5px; border-radius: 4px; font-size: 10px; }
+    </style>
 </head>
-
 <body>
-<header>
-  <div class="wrap">
-    <div class="top">
-      <div class="brand">
-        <div class="logo">★</div>
-        <div>
-          <h1>Mi Salón PRO</h1>
-          <p>2 personas · Offline · WhatsApp · Caja</p>
-        </div>
-      </div>
-      <div class="right">
-        <span class="pill" id="pillStatus">Guardado: OK</span>
-        <button class="mini" onclick="exportarJSON()">Exportar</button>
-        <button class="mini" onclick="importarJSON()">Importar</button>
-        <button class="mini danger" onclick="resetTotal()">Reset</button>
-      </div>
+
+    <div class="tabs">
+        <button class="tab-btn active" onclick="openTab(event, 'sec-agenda')">📅 CITAS</button>
+        <button class="tab-btn" onclick="openTab(event, 'sec-ventas')">💰 CAJA</button>
+        <button class="tab-btn" onclick="openTab(event, 'sec-cls')">👥 CLIENTES</button>
+        <button class="tab-btn" onclick="openTab(event, 'sec-config')">⚙️ AJUSTES</button>
     </div>
 
-    <div class="tabs" id="tabs">
-      <div class="tab active" data-tab="inicio">Inicio</div>
-      <div class="tab" data-tab="agenda">Agenda</div>
-      <div class="tab" data-tab="clientes">Clientes</div>
-      <div class="tab" data-tab="servicios">Servicios</div>
-      <div class="tab" data-tab="caja">Caja</div>
-      <div class="tab" data-tab="ajustes">Ajustes</div>
+    <div id="sec-agenda" class="content active">
+        <div class="card">
+            <h2>+ AGENDAR CITA</h2>
+            <input type="text" id="a-nom" placeholder="Cliente">
+            <select id="a-barb" class="staff-select"></select>
+            <div style="display:flex; gap:5px;"><input type="date" id="a-fec"><input type="time" id="a-hor"></div>
+            <button class="btn-m" onclick="agendar()">GUARDAR CITA</button>
+        </div>
+        <div class="cal" id="calendario"></div>
+        <div id="listaCitas"></div>
     </div>
-  </div>
-</header>
 
-<main class="wrap">
-  <!-- INICIO -->
-  <section id="tab-inicio">
-    <div class="grid">
-      <div class="card">
-        <div class="hd">
-          <h2>Hoy</h2>
-          <div class="hint" id="hoyFecha"></div>
+    <div id="sec-ventas" class="content">
+        <div class="card" style="text-align:center">
+            <small>INGRESOS HOY</small>
+            <h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div style="background:#000; padding:5px; border-radius:5px;"><small id="nP1"></small><br><b id="sB1">$0</b></div>
+                <div style="background:#000; padding:5px; border-radius:5px;"><small id="nP2"></small><br><b id="sB2">$0</b></div>
+            </div>
         </div>
-        <div class="bd">
-          <div class="kpis">
-            <div class="kpi">
-              <div class="v" id="kpiCitas">0</div>
-              <div class="t">Citas</div>
+        <div class="card">
+            <h2>COBRAR</h2>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:5px; margin-bottom:10px;">
+                <button class="btn-fast" onclick="rápido('cab')">CABA.</button>
+                <button class="btn-fast" onclick="rápido('dam')">DAMA</button>
+                <button class="btn-fast" onclick="rápido('nin')">NIÑO</button>
+                <button class="btn-fast" onclick="rápido('pla')">PLANCHADO</button>
             </div>
-            <div class="kpi">
-              <div class="v" id="kpiIngresos">$0</div>
-              <div class="t">Ingresos</div>
-            </div>
-            <div class="kpi">
-              <div class="v" id="kpiGastos">$0</div>
-              <div class="t">Gastos</div>
-            </div>
-          </div>
-
-          <div class="sep"></div>
-
-          <div class="row">
-            <div class="col">
-              <label>Filtrar por estilista</label>
-              <select id="homeFilterPersona" onchange="renderTodo()">
-                <option value="">Todas</option>
-              </select>
-            </div>
-            <div class="col">
-              <label>Acción rápida</label>
-              <button class="primary" onclick="irTab('agenda')">+ Nueva cita</button>
-            </div>
-          </div>
-
-          <div class="sep"></div>
-
-          <div class="note">
-            Tip PRO: antes de pegar cambios grandes, exporta el JSON (backup).
-          </div>
+            <select id="v-barb" class="staff-select"></select>
+            <input type="number" id="v-mon" placeholder="Monto $">
+            <button class="btn-m" onclick="vender()">REGISTRAR VENTA</button>
         </div>
-      </div>
-
-      <div class="card">
-        <div class="hd">
-          <h2>Próximas citas</h2>
-          <div class="hint">Hoy</div>
-        </div>
-        <div class="bd">
-          <div class="list" id="homeCitasList"></div>
-        </div>
-      </div>
     </div>
-  </section>
 
-  <!-- AGENDA -->
-  <section id="tab-agenda" class="hidden">
-    <div class="grid">
-      <div class="card">
-        <div class="hd">
-          <h2>Nueva cita</h2>
-          <div class="hint">Guarda offline</div>
+    <div id="sec-cls" class="content">
+        <div class="card">
+            <h2>NUEVO CLIENTE / TINTES</h2>
+            <input type="text" id="c-nom" placeholder="Nombre">
+            <input type="tel" id="c-tel" placeholder="WhatsApp">
+            <button class="btn-m" onclick="guardarCl()">GUARDAR</button>
         </div>
-        <div class="bd">
-          <div class="row">
-            <div class="col">
-              <label>Fecha</label>
-              <input type="date" id="citaFecha" />
-            </div>
-            <div class="col">
-              <label>Hora</label>
-              <input type="time" id="citaHora" />
-            </div>
-            <div class="col">
-              <label>Estilista</label>
-              <select id="citaPersona"></select>
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Cliente</label>
-              <select id="citaCliente"></select>
-            </div>
-            <div class="col">
-              <label>Servicio</label>
-              <select id="citaServicio"></select>
-            </div>
-            <div class="col">
-              <label>Precio (MXN)</label>
-              <input type="number" id="citaPrecio" placeholder="Ej. 200" />
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Notas</label>
-              <textarea id="citaNotas" placeholder="Ej. #2 laterales, tijera arriba, tono, etc."></textarea>
-            </div>
-          </div>
-
-          <div class="btns">
-            <button class="primary" onclick="crearCita()">Guardar cita</button>
-            <button onclick="limpiarCita()">Limpiar notas</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="hd">
-          <h2>Lista de citas</h2>
-          <div class="hint">Filtra y marca atendidas</div>
-        </div>
-        <div class="bd">
-          <div class="row">
-            <div class="col">
-              <label>Fecha a ver</label>
-              <input type="date" id="agendaFiltroFecha" onchange="renderCitas()" />
-            </div>
-            <div class="col">
-              <label>Estilista</label>
-              <select id="agendaFiltroPersona" onchange="renderCitas()">
-                <option value="">Todas</option>
-              </select>
-            </div>
-          </div>
-          <div class="sep"></div>
-          <div class="list" id="citasList"></div>
-        </div>
-      </div>
+        <input type="text" id="bus" placeholder="🔍 Buscar cliente..." onkeyup="render()">
+        <div id="listaClientes"></div>
     </div>
-  </section>
 
-  <!-- CLIENTES -->
-  <section id="tab-clientes" class="hidden">
-    <div class="grid">
-      <div class="card">
-        <div class="hd">
-          <h2>Nuevo cliente</h2>
-          <div class="hint">WhatsApp directo</div>
+    <div id="sec-config" class="content">
+        <div class="card">
+            <h2>PELUQUEROS</h2>
+            <input type="text" id="p1-n" placeholder="Nombre Peluquero 1">
+            <input type="text" id="p2-n" placeholder="Nombre Peluquero 2">
+            <button class="btn-m" onclick="saveStaff()">GUARDAR STAFF</button>
         </div>
-        <div class="bd">
-          <div class="row">
-            <div class="col">
-              <label>Nombre</label>
-              <input id="cliNombre" placeholder="Ej. Juan Pérez" />
-            </div>
-            <div class="col">
-              <label>WhatsApp (10 dígitos)</label>
-              <input id="cliWhats" placeholder="Ej. 9991234567" inputmode="numeric" />
-            </div>
-          </div>
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Notas / Preferencias</label>
-              <textarea id="cliNotas" placeholder="Ej. alérgico, color, máquina, etc."></textarea>
-            </div>
-          </div>
-          <div class="btns">
-            <button class="primary" onclick="crearCliente()">Guardar cliente</button>
-            <button onclick="limpiarCliente()">Limpiar</button>
-          </div>
+        <div class="card">
+            <h2>PRECIOS</h2>
+            <small>Caballero:</small><input type="number" id="pr-cab">
+            <small>Dama:</small><input type="number" id="pr-dam">
+            <button class="btn-m" onclick="savePrecios()">GUARDAR PRECIOS</button>
         </div>
-      </div>
-
-      <div class="card">
-        <div class="hd">
-          <h2>Clientes</h2>
-          <div class="hint">Buscar + Editar</div>
-        </div>
-        <div class="bd">
-          <div class="row">
-            <div class="col">
-              <label>Buscar</label>
-              <input id="cliBuscar" placeholder="Escribe nombre..." oninput="renderClientes()" />
-            </div>
-          </div>
-          <div class="sep"></div>
-          <div class="list" id="clientesList"></div>
-        </div>
-      </div>
+        <button class="btn-m" style="background:var(--a); color:#fff" onclick="exportar()">💾 RESPALDO TOTAL</button>
     </div>
-  </section>
-
-  <!-- SERVICIOS -->
-  <section id="tab-servicios" class="hidden">
-    <div class="grid">
-      <div class="card">
-        <div class="hd">
-          <h2>Nuevo servicio</h2>
-          <div class="hint">Editable después</div>
-        </div>
-        <div class="bd">
-          <div class="row">
-            <div class="col">
-              <label>Nombre</label>
-              <input id="srvNombre" placeholder="Ej. Corte" />
-            </div>
-            <div class="col">
-              <label>Duración (min)</label>
-              <input id="srvDur" type="number" placeholder="Ej. 30" />
-            </div>
-            <div class="col">
-              <label>Precio (MXN)</label>
-              <input id="srvPrecio" type="number" placeholder="Ej. 200" />
-            </div>
-          </div>
-          <div class="btns">
-            <button class="primary" onclick="crearServicio()">Guardar servicio</button>
-            <button onclick="limpiarServicio()">Limpiar</button>
-          </div>
-          <div class="note" style="margin-top:10px">
-            Tip: en Agenda, al elegir servicio, el precio se autollenará (pero lo puedes cambiar).
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="hd">
-          <h2>Servicios</h2>
-          <div class="hint">Editar nombre / precio</div>
-        </div>
-        <div class="bd">
-          <div class="list" id="serviciosList"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- CAJA -->
-  <section id="tab-caja" class="hidden">
-    <div class="grid">
-      <div class="card">
-        <div class="hd">
-          <h2>Movimiento</h2>
-          <div class="hint">Ingreso / Gasto</div>
-        </div>
-        <div class="bd">
-          <div class="row">
-            <div class="col">
-              <label>Fecha</label>
-              <input type="date" id="movFecha" />
-            </div>
-            <div class="col">
-              <label>Tipo</label>
-              <select id="movTipo">
-                <option value="ingreso">Ingreso</option>
-                <option value="gasto">Gasto</option>
-              </select>
-            </div>
-            <div class="col">
-              <label>Monto (MXN)</label>
-              <input type="number" id="movMonto" placeholder="Ej. 150" />
-            </div>
-          </div>
-
-          <div class="row" style="margin-top:10px">
-            <div class="col">
-              <label>Nota</label>
-              <input id="movNota" placeholder="Ej. Venta / Producto / Agua..." />
-            </div>
-          </div>
-
-          <div class="btns">
-            <button class="primary" onclick="crearMovimiento()">Guardar</button>
-            <button onclick="limpiarMovimiento()">Limpiar</button>
-          </div>
-        </div>
-      </div>
-
-      <div class="card">
-        <div class="hd">
-          <h2>Caja</h2>
-          <div class="hint">Por día</div>
-        </div>
-        <div class="bd">
-          <div class="row">
-            <div class="col">
-              <label>Ver fecha</label>
-              <input type="date" id="cajaFiltroFecha" onchange="renderCaja()" />
-            </div>
-            <div class="col">
-              <label>Acción</label>
-              <button class="mini" onclick="copiarResumenCaja()">Copiar resumen</button>
-            </div>
-          </div>
-          <div class="sep"></div>
-          <div class="kpis">
-            <div class="kpi">
-              <div class="v" id="cajaIng">$0</div>
-              <div class="t">Ingresos</div>
-            </div>
-            <div class="kpi">
-              <div class="v" id="cajaGas">$0</div>
-              <div class="t">Gastos</div>
-            </div>
-            <div class="kpi">
-              <div class="v" id="cajaNet">$0</div>
-              <div class="t">Neto</div>
-            </div>
-          </div>
-          <div class="sep"></div>
-          <div class="list" id="movList"></div>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- AJUSTES -->
-  <section id="tab-ajustes" class="hidden">
-    <div class="card">
-      <div class="hd">
-        <h2>Ajustes</h2>
-        <div class="hint">Cambia Oz y Kari cuando quieras</div>
-      </div>
-      <div class="bd">
-        <div class="row">
-          <div class="col">
-            <label>Estilista 1</label>
-            <input id="setP1" placeholder="Ej. Oz" />
-          </div>
-          <div class="col">
-            <label>Estilista 2</label>
-            <input id="setP2" placeholder="Ej. Kari" />
-          </div>
-        </div>
-        <div class="btns">
-          <button class="primary" onclick="guardarAjustes()">Guardar ajustes</button>
-          <button onclick="cargarDemo()">Cargar demo</button>
-        </div>
-        <div class="sep"></div>
-        <div class="note">
-          <b>Exportar</b> crea un backup JSON.<br/>
-          <b>Importar</b> restaura un backup JSON.<br/>
-          <b>Reset</b> borra TODO (solo si vas a iniciar desde cero).
-        </div>
-      </div>
-    </div>
-  </section>
-</main>
 
 <script>
-  // =========================
-  //  UTILIDADES
-  // =========================
-  const $ = (id) => document.getElementById(id);
-  const money = (n) => {
-    const x = Number(n || 0);
-    return x.toLocaleString("es-MX", { style:"currency", currency:"MXN" });
-  };
-  const todayISO = () => new Date().toISOString().slice(0,10);
-  const uid = () => String(Date.now()) + "-" + Math.random().toString(16).slice(2);
+    let db_v = JSON.parse(localStorage.getItem('M_V')) || [];
+    let db_c = JSON.parse(localStorage.getItem('M_C')) || [];
+    let db_l = JSON.parse(localStorage.getItem('M_L')) || [];
+    let db_s = JSON.parse(localStorage.getItem('M_S')) || {p1:"Manuel", p2:"Socio"};
+    let db_p = JSON.parse(localStorage.getItem('M_P')) || {cab:150, dam:250, nin:100, pla:200};
+    let fechaSel = new Date().toISOString().split('T')[0];
 
-  // =========================
-  //  ESTADO (LocalStorage)
-  // =========================
-  const KEY = "miSalonPro_v2";
-
-  const defaults = {
-    // ✅ Oz y Kari por defecto (pero se puede cambiar en Ajustes)
-    settings: { p1:"Oz", p2:"Kari" },
-
-    clientes: [],
-
-    // ✅ Servicios precargados (editables)
-    servicios: [
-      { id: uid(), nombre:"Corte Caballero", dur:30, precio:200 },
-      { id: uid(), nombre:"Corte Dama",      dur:45, precio:250 },
-      { id: uid(), nombre:"Corte Niño",      dur:25, precio:180 },
-      { id: uid(), nombre:"Planchado",       dur:60, precio:300 },
-      { id: uid(), nombre:"Secado de Cabello",dur:30, precio:200 },
-      { id: uid(), nombre:"Tinte",           dur:120,precio:700 },
-    ],
-
-    citas: [],
-    movimientos: []
-  };
-
-  let state = load();
-
-  function load(){
-    try{
-      const raw = localStorage.getItem(KEY);
-      if(!raw) return structuredClone(defaults);
-      const parsed = JSON.parse(raw);
-      return { ...structuredClone(defaults), ...parsed };
-    }catch(e){
-      return structuredClone(defaults);
+    function openTab(evt, tabName) {
+        let contents = document.getElementsByClassName("content");
+        for (let i = 0; i < contents.length; i++) contents[i].classList.remove("active");
+        let buttons = document.getElementsByClassName("tab-btn");
+        for (let i = 0; i < buttons.length; i++) buttons[i].classList.remove("active");
+        document.getElementById(tabName).classList.add("active");
+        evt.currentTarget.classList.add("active");
+        render();
     }
-  }
 
-  function save(){
-    localStorage.setItem(KEY, JSON.stringify(state));
-    $("pillStatus").textContent = "Guardado: OK";
-    $("pillStatus").style.borderColor = "rgba(51,209,122,.35)";
-    $("pillStatus").style.background = "rgba(51,209,122,.12)";
-    $("pillStatus").style.color = "var(--text)";
-  }
+    function save() {
+        localStorage.setItem('M_V', JSON.stringify(db_v));
+        localStorage.setItem('M_C', JSON.stringify(db_c));
+        localStorage.setItem('M_L', JSON.stringify(db_l));
+        localStorage.setItem('M_S', JSON.stringify(db_s));
+        localStorage.setItem('M_P', JSON.stringify(db_p));
+    }
 
-  function flashSave(){
-    $("pillStatus").textContent = "Guardando...";
-    $("pillStatus").style.borderColor = "rgba(212,175,55,.45)";
-    $("pillStatus").style.background = "rgba(212,175,55,.18)";
-    $("pillStatus").style.color = "var(--text)";
-    setTimeout(save, 80);
-  }
+    function saveStaff() { db_s.p1=document.getElementById('p1-n').value; db_s.p2=document.getElementById('p2-n').value; save(); render(); alert("Staff Guardado"); }
+    function savePrecios() { db_p.cab=document.getElementById('pr-cab').value; db_p.dam=document.getElementById('pr-dam').value; save(); alert("Precios Guardados"); }
+    function agendar() { 
+        const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value;
+        if(n&&f&&h){ db_c.push({n,f,h,b,id:Date.now()}); save(); render(); alert("Cita Agendada"); }
+    }
+    function rápido(t) { document.getElementById('v-mon').value = db_p[t]; }
+    function vender() {
+        const m=parseFloat(document.getElementById('v-mon').value), b=document.getElementById('v-barb').value;
+        if(m){ db_v.push({m,b,f:new Date().toLocaleDateString()}); save(); render(); alert("Venta OK"); }
+    }
+    function guardarCl() { 
+        const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value;
+        if(n){ db_l.push({n,t,h:[],id:Date.now()}); save(); render(); alert("Cliente Guardado"); }
+    }
+    function addTinte(id) { 
+        const t=prompt("Fórmula:"); if(t){ let i=db_l.findIndex(x=>x.id===id); db_l[i].h.unshift({f:new Date().toLocaleDateString(), t}); save(); render(); } 
+    }
 
-  // =========================
-  //  TABS
-  // =========================
-  const tabs = $("tabs");
-  tabs.addEventListener("click", (e)=>{
-    const t = e.target.closest(".tab");
-    if(!t) return;
-    irTab(t.dataset.tab);
-  });
+    function render() {
+        // Update Nombres
+        document.getElementById('nP1').innerText = db_s.p1; document.getElementById('nP2').innerText = db_s.p2;
+        document.getElementById('p1-n').value = db_s.p1; document.getElementById('p2-n').value = db_s.p2;
+        document.getElementById('pr-cab').value = db_p.cab; document.getElementById('pr-dam').value = db_p.dam;
 
-  function irTab(name){
-    document.querySelectorAll(".tab").forEach(x=>x.classList.re
+        // Selects
+        const selects = document.querySelectorAll('.staff-select');
+        selects.forEach(s => s.innerHTML = `<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`);
+
+        // Caja
+        const hoy = new Date().toLocaleDateString(); let t=0, b1=0, b2=0;
+        db_v.forEach(v => { if(v.f===hoy){ t+=v.m; if(v.b===db_s.p1) b1+=v.m; else b2+=v.m; } });
+        document.getElementById('tH').innerText = "$"+t; document.getElementById('sB1').innerText = "$"+b1; document.getElementById('sB2').innerText = "$"+b2;
+
+        // Cal
+        const cal = document.getElementById('calendario'); cal.innerHTML = "";
+        const d = new Date(); const ult = new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+        for(let i=1; i<=ult; i++){
+            let f = `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            let has = db_c.some(x=>x.f===f)?'has-c':''; let sel = f===fechaSel?'sel-d':'';
+            cal.innerHTML += `<div class="cal-d ${has} ${sel}" onclick="fechaSel='${f}';render()">${i}</div>`;
+        }
+
+        // List Citas
+        const lc = document.getElementById('listaCitas'); lc.innerHTML = "";
+        db_c.filter(x=>x.f===fechaSel).forEach(c => {
+            lc.innerHTML += `<div class="item"><span class="badge">${c.h} | ${c.b}</span><br><b>${c.n}</b><br><button onclick="if(confirm('Borrar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render()}" style="color:red;background:none;border:none;font-size:10px;">ELIMINAR</button></div>`;
+        });
+
+        // List Clientes
+        const lcl = document.getElementById('listaClientes'), b=document.getElementById('bus').value.toLowerCase(); lcl.innerHTML="";
+        db_l.filter(x=>x.n.toLowerCase().includes(b)).forEach(c => {
+            let h = c.h.map(x=>`<div style="font-size:10px;color:gray;">${x.f}: ${x.t}</div>`).join('');
+            lcl.innerHTML += `<div class="item"><b>${c.n}</b><br>${h}<button onclick="addTinte(${c.id})" style="background:var(--oro);border:none;border-radius:4px;font-size:10px;padding:4px;margin-top:5px;">+ TINTE</button></div>`;
+        });
+    }
+
+    function exportar(){ const blob = new Blob([JSON.stringify(localStorage)], {type: "application/json"}); const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "salon_backup.json"; a.click(); }
+
+    render();
+</script>
+</body>
+</html>
