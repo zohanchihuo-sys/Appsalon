@@ -8,24 +8,46 @@
     <style>
         :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; --p: #9b59b6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #eee; margin: 0; overflow-x: hidden; }
-        header { background: #000; padding: 15px; display: flex; align-items: center; border-bottom: 2px solid var(--oro); position: sticky; top: 0; z-index: 100; }
+        
+        /* HEADER PROFESIONAL */
+        header { background: #000; padding: 15px; border-bottom: 2px solid var(--oro); display: flex; align-items: center; position: sticky; top: 0; z-index: 100; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
         .menu-icon { font-size: 26px; color: var(--oro); cursor: pointer; margin-right: 15px; }
-        .brand { color: var(--oro); font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
-        .nav-drawer { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: #111; z-index: 200; transition: 0.3s; border-right: 1px solid var(--oro); }
+        .brand { color: var(--oro); font-weight: bold; letter-spacing: 2px; text-transform: uppercase; font-size: 1.1rem; }
+
+        /* MENÚ LATERAL */
+        .nav-drawer { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: #111; z-index: 200; transition: 0.3s cubic-bezier(0.4, 0, 0.2, 1); border-right: 1px solid var(--oro); }
         .nav-drawer.active { left: 0; }
-        .nav-item { padding: 15px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; cursor: pointer; font-size: 14px; }
+        .nav-item { padding: 18px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; text-decoration: none; cursor: pointer; font-size: 14px; font-weight: 600; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 150; }
         .overlay.active { display: block; }
-        .content { padding: 15px; display: none; }
+
+        /* CONTENEDORES */
+        .content { padding: 15px; display: none; animation: fadeIn 0.3s; }
         .content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #252525; }
-        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; margin-top: 5px; }
-        .btn-scan { background: #333; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; margin-bottom: 10px; }
-        #reader { width: 100%; border-radius: 12px; overflow: hidden; display: none; border: 2px solid var(--oro); margin-bottom: 10px; }
+        h2 { color: var(--oro); font-size: 0.85rem; text-transform: uppercase; text-align: center; border-bottom: 1px solid #333; padding-bottom: 10px; margin-top: 0; }
+
+        /* CALENDARIO */
+        .cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; margin-bottom: 15px; }
+        .cal-d { background: #1a1a1a; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; font-size: 12px; border-radius: 6px; border: 1px solid #333; cursor: pointer; }
+        .has-c { border: 1px solid var(--oro); color: var(--oro); font-weight: bold; }
+        .sel-d { background: var(--oro) !important; color: black !important; }
+
+        /* ELEMENTOS FORMULARIO */
+        input, select, textarea { width: 100%; padding: 12px; margin: 6px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; margin-top: 5px; transition: 0.2s; }
+        .btn-m:active { transform: scale(0.98); opacity: 0.8; }
+        .grid-buttons { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-bottom: 10px; }
+        .btn-fast { background: #222; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; font-size: 10px; font-weight: bold; cursor: pointer; }
+
+        /* LISTAS E HISTORIAL */
         .item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--oro); position: relative; }
-        .hist-item { background: #000; padding: 8px; border-radius: 6px; margin-top: 5px; font-size: 12px; border: 1px solid #333; color: #bbb; }
-        .btn-del { background: var(--r); color: white; border: none; padding: 6px 12px; border-radius: 6px; font-size: 11px; margin-top: 8px; cursor: pointer; }
+        .hist-box { background: #000; padding: 10px; border-radius: 8px; margin-top: 8px; font-size: 12px; border-left: 2px solid var(--p); color: #bbb; }
+        .badge { background: #333; color: var(--oro); padding: 2px 6px; border-radius: 4px; font-size: 10px; font-weight: bold; margin-bottom: 5px; display: inline-block; }
+        .btn-action { padding: 8px; border-radius: 6px; border: none; font-size: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; display: none; border: 2px solid var(--oro); margin-bottom: 10px; }
     </style>
 </head>
 <body>
@@ -38,130 +60,239 @@
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
     <nav class="nav-drawer" id="drawer">
-        <div style="padding:20px; text-align:center; color:var(--oro); background:#000"><b>MANUEL SALÓN</b></div>
-        <div class="nav-item" onclick="showSec('sec-dash')">🏠 INICIO / CAJA</div>
-        <div class="nav-item" onclick="showSec('sec-ventas')">💰 COBRAR / ESCÁNER</div>
+        <div style="padding:20px; text-align:center; background:#000;"><b style="color:var(--oro)">MENÚ DE CONTROL</b></div>
+        <div class="nav-item" onclick="showSec('sec-agenda')">📅 AGENDA Y CITAS</div>
+        <div class="nav-item" onclick="showSec('sec-ventas')">💰 COBRAR / CAJA</div>
         <div class="nav-item" onclick="showSec('sec-cls')">👥 CLIENTES / TINTES</div>
-        <div class="nav-item" onclick="showSec('sec-inv')">📦 INVENTARIO</div>
-        <div class="nav-item" onclick="showSec('sec-ajustes')">⚙️ AJUSTES</div>
-        <div class="nav-item" onclick="exportar()" style="color:var(--a)">💾 RESPALDO</div>
+        <div class="nav-item" onclick="showSec('sec-inv')">📦 INVENTARIO SCAN</div>
+        <div class="nav-item" onclick="showSec('sec-config')">⚙️ CONFIGURACIÓN</div>
+        <div class="nav-item" onclick="exportar()" style="color:var(--a)">💾 RESPALDO TOTAL</div>
     </nav>
 
-    <div id="reader-cont" style="padding: 0 15px;"><div id="reader"></div><button id="btn-stop" class="btn-m" style="display:none; background:var(--r); color:white; margin-bottom:10px;" onclick="stopScan()">CERRAR CÁMARA</button></div>
+    <div id="scanner-cont" style="padding: 0 15px;">
+        <div id="reader"></div>
+        <button id="btn-stop" class="btn-m" style="display:none; background:var(--r); color:white; margin-bottom:10px;" onclick="stopScan()">CERRAR CÁMARA</button>
+    </div>
 
-    <div id="sec-dash" class="content active">
-        <div class="card" style="text-align:center">
-            <small>TOTAL HOY</small><h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
-            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
-                <div class="card" style="margin:0"><small>Barbero 1</small><br><b id="sB1">$0</b></div>
-                <div class="card" style="margin:0"><small>Barbero 2</small><br><b id="sB2">$0</b></div>
-            </div>
+    <div id="sec-agenda" class="content active">
+        <div class="card">
+            <h2 id="t-cita">NUEVA CITA</h2>
+            <input type="hidden" id="edit-cita-id">
+            <select id="a-barb" class="staff-select"></select>
+            <input type="text" id="a-nom" placeholder="Nombre del Cliente">
+            <div style="display:flex; gap:5px;"><input type="date" id="a-fec"><input type="time" id="a-hor"></div>
+            <button class="btn-m" onclick="agendar()">GUARDAR EN AGENDA</button>
+            <button id="btn-c-cita" class="btn-m" style="display:none; background:#444; color:white;" onclick="limpiarCita()">CANCELAR EDICIÓN</button>
         </div>
+        <div class="cal" id="calendario"></div>
+        <div id="listaCitas"></div>
     </div>
 
     <div id="sec-ventas" class="content">
+        <div class="card" style="text-align:center">
+            <small>INGRESOS DE HOY</small><h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px;">
+                <div style="background:#000; padding:10px; border-radius:8px;"><small id="nP1">P1</small><br><b id="sB1">$0</b></div>
+                <div style="background:#000; padding:10px; border-radius:8px;"><small id="nP2">P2</small><br><b id="sB2">$0</b></div>
+            </div>
+        </div>
         <div class="card">
-            <h2>PUNTO DE VENTA</h2>
-            <select id="vb"><option value="P1">Barbero 1</option><option value="P2">Barbero 2</option></select>
+            <h2>COBRAR SERVICIO / PRODUCTO</h2>
+            <div class="grid-buttons">
+                <button class="btn-fast" onclick="rápido('cab')">CABA.</button>
+                <button class="btn-fast" onclick="rápido('dam')">DAMA</button>
+                <button class="btn-fast" onclick="rápido('nin')">NIÑO</button>
+                <button class="btn-fast" onclick="rápido('pla')">PLANCHADO</button>
+            </div>
             <button class="btn-scan" onclick="startScan('venta')">📷 ESCANEAR PRODUCTO</button>
-            <input type="text" id="vn" placeholder="Nombre Cliente">
-            <input type="number" id="vm" placeholder="Monto $">
-            <button class="btn-m" onclick="vender()">REGISTRAR VENTA</button>
+            <select id="v-barb" class="staff-select"></select>
+            <input type="text" id="v-nom" placeholder="Cliente">
+            <input type="number" id="v-mon" placeholder="Monto $">
+            <button class="btn-m" onclick="vender()">REGISTRAR COBRO</button>
         </div>
     </div>
 
     <div id="sec-cls" class="content">
         <div class="card">
             <h2 id="t-cls">+ REGISTRAR CLIENTE</h2>
-            <input type="hidden" id="edit-id">
-            <input type="text" id="n_cn" placeholder="Nombre">
-            <input type="tel" id="n_ct" placeholder="WhatsApp">
-            <button id="btn-g-c" class="btn-m" onclick="guardarCliente()">GUARDAR</button>
-            <button id="btn-c-e" class="btn-m" style="background:#444; color:white; display:none;" onclick="cancelEdit()">CANCELAR</button>
+            <input type="hidden" id="edit-cl-id">
+            <input type="text" id="c-nom" placeholder="Nombre y Apellido">
+            <input type="tel" id="c-tel" placeholder="WhatsApp">
+            <button class="btn-m" onclick="guardarCliente()">GUARDAR CLIENTE</button>
+            <button id="btn-c-cl" class="btn-m" style="display:none; background:#444; color:white;" onclick="limpiarCl()">CANCELAR</button>
         </div>
-        <input type="text" id="bus" placeholder="🔍 Buscar por nombre o tratamiento..." onkeyup="listarClientes()">
+        <input type="text" id="bus" placeholder="🔍 Buscar cliente o tratamiento..." onkeyup="listarClientes()">
         <div id="listaClientes" style="margin-top:15px"></div>
     </div>
 
     <div id="sec-inv" class="content">
         <div class="card">
-            <h2>INVENTARIO</h2>
+            <h2>ENTRADA DE STOCK</h2>
             <button class="btn-scan" onclick="startScan('stock')">📷 ESCANEAR CÓDIGO</button>
-            <input type="text" id="i_c" placeholder="Código de barras">
-            <input type="text" id="i_n" placeholder="Producto">
-            <input type="number" id="i_q" placeholder="Cantidad">
-            <input type="number" id="i_p" placeholder="Precio $">
-            <button class="btn-m" onclick="addInv()">GUARDAR STOCK</button>
+            <input type="text" id="i-cod" placeholder="Código de Barras">
+            <input type="text" id="i-nom" placeholder="Nombre Producto">
+            <input type="number" id="i-can" placeholder="Cantidad">
+            <input type="number" id="i-pre" placeholder="Precio Venta $">
+            <button class="btn-m" onclick="addInv()">GUARDAR EN STOCK</button>
         </div>
         <div id="listaInv"></div>
     </div>
 
+    <div id="sec-config" class="content">
+        <div class="card">
+            <h2>PELUQUEROS</h2>
+            <input type="text" id="p1-n" placeholder="Nombre Peluquero 1">
+            <input type="text" id="p2-n" placeholder="Nombre Peluquero 2">
+            <button class="btn-m" onclick="guardarConfig()">ACTUALIZAR STAFF</button>
+        </div>
+        <div class="card">
+            <h2>PRECIOS DE SERVICIOS</h2>
+            <small>Caballero:</small><input type="number" id="pr-cab">
+            <small>Dama:</small><input type="number" id="pr-dam">
+            <small>Niño:</small><input type="number" id="pr-nin">
+            <small>Planchado:</small><input type="number" id="pr-pla">
+            <button class="btn-m" onclick="guardarConfig()">ACTUALIZAR PRECIOS</button>
+        </div>
+    </div>
+
 <script>
-    let vts = JSON.parse(localStorage.getItem('ms_v')) || [];
-    let cls = JSON.parse(localStorage.getItem('ms_l')) || [];
-    let inv = JSON.parse(localStorage.getItem('ms_i')) || [];
+    // --- BASE DE DATOS BLINDADA ---
+    let db_v = JSON.parse(localStorage.getItem('MS_V5_VENTAS')) || [];
+    let db_c = JSON.parse(localStorage.getItem('MS_V5_CITAS')) || [];
+    let db_l = JSON.parse(localStorage.getItem('MS_V5_CLIENTES')) || [];
+    let db_i = JSON.parse(localStorage.getItem('MS_V5_STOCK')) || [];
+    let db_s = JSON.parse(localStorage.getItem('MS_V5_STAFF')) || {p1:"Manuel", p2:"Peluquero 2"};
+    let db_p = JSON.parse(localStorage.getItem('MS_V5_PRECIOS')) || {cab:150, dam:250, nin:120, pla:200};
+    
+    let fechaSel = new Date().toISOString().split('T')[0];
     let html5QrCode;
 
-    function toggleMenu() { document.getElementById('drawer').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
-    function showSec(id) { document.querySelectorAll('.content').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); toggleMenu(); stopScan(); render(); }
+    function save() {
+        localStorage.setItem('MS_V5_VENTAS', JSON.stringify(db_v));
+        localStorage.setItem('MS_V5_CITAS', JSON.stringify(db_c));
+        localStorage.setItem('MS_V5_CLIENTES', JSON.stringify(db_l));
+        localStorage.setItem('MS_V5_STOCK', JSON.stringify(db_i));
+        localStorage.setItem('MS_V5_STAFF', JSON.stringify(db_s));
+        localStorage.setItem('MS_V5_PRECIOS', JSON.stringify(db_p));
+    }
 
-    function startScan(m) {
+    // --- NAVEGACIÓN ---
+    function toggleMenu() { document.getElementById('drawer').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+    function showSec(id) { 
+        document.querySelectorAll('.content').forEach(s => s.classList.remove('active'));
+        document.getElementById(id).classList.add('active');
+        toggleMenu(); stopScan(); render(); 
+    }
+
+    // --- LÓGICA ESCÁNER ---
+    function startScan(modo) {
         document.getElementById('reader').style.display='block'; document.getElementById('btn-stop').style.display='block';
         html5QrCode = new Html5Qrcode("reader");
         html5QrCode.start({facingMode:"environment"}, {fps:10, qrbox:250}, (txt) => {
-            if(m==='stock') { document.getElementById('i_c').value=txt; let p=inv.find(x=>x.c===txt); if(p){document.getElementById('i_n').value=p.n; document.getElementById('i_p').value=p.p;} }
-            else { let p=inv.find(x=>x.c===txt); if(p){document.getElementById('vn').value=p.n; document.getElementById('vm').value=p.p;} else alert("No encontrado"); }
+            if(modo==='stock') { 
+                document.getElementById('i-cod').value=txt; 
+                let p=db_i.find(x=>x.cod===txt); if(p){document.getElementById('i-nom').value=p.nom; document.getElementById('i-pre').value=p.pre;}
+            } else {
+                let p=db_i.find(x=>x.cod===txt); 
+                if(p){document.getElementById('v-nom').value=p.nom; document.getElementById('v-mon').value=p.pre;} else alert("Producto no registrado");
+            }
             stopScan();
         }).catch(e=>console.log(e));
     }
     function stopScan() { if(html5QrCode){ html5QrCode.stop().then(()=>{document.getElementById('reader').style.display='none'; document.getElementById('btn-stop').style.display='none';}); } }
 
+    // --- AGENDA, CAMBIOS Y CANCELACIONES ---
+    function agendar() {
+        const n=document.getElementById('a-nom').value, f=document.getElementById('a-fec').value, h=document.getElementById('a-hor').value, b=document.getElementById('a-barb').value, id=document.getElementById('edit-cita-id').value;
+        if(!n || !f || !h) return alert("Completa los datos");
+        if(id) { let i=db_c.findIndex(x=>x.id==id); db_c[i]={n,f,h,b,id:parseInt(id)}; }
+        else { db_c.push({n,f,h,b,id:Date.now()}); }
+        save(); limpiarCita(); render(); alert("Agenda actualizada");
+    }
+    function prepararCita(id) {
+        const c=db_c.find(x=>x.id===id); document.getElementById('edit-cita-id').value=c.id; document.getElementById('a-nom').value=c.n; document.getElementById('a-fec').value=c.f; document.getElementById('a-hor').value=c.h; document.getElementById('a-barb').value=c.b;
+        document.getElementById('t-cita').innerText="🔄 CAMBIAR CITA"; document.getElementById('btn-c-cita').style.display="block"; window.scrollTo(0,0);
+    }
+    function limpiarCita() { document.getElementById('edit-cita-id').value=""; document.getElementById('a-nom').value=""; document.getElementById('t-cita').innerText="NUEVA CITA"; document.getElementById('btn-c-cita').style.display="none"; }
+
+    // --- CLIENTES, EDICIÓN Y TINTES ---
     function guardarCliente() {
-        const n=document.getElementById('n_cn').value, t=document.getElementById('n_ct').value, id=document.getElementById('edit-id').value;
+        const n=document.getElementById('c-nom').value, t=document.getElementById('c-tel').value, id=document.getElementById('edit-cl-id').value;
         if(!n) return;
-        if(id) { let i=cls.findIndex(x=>x.id==id); cls[i].n=n; cls[i].t=t; }
-        else { cls.push({n, t, h:[], id:Date.now()}); }
-        cancelEdit(); save(); render();
+        if(id) { let i=db_l.findIndex(x=>x.id==id); db_l[i].n=n; db_l[i].t=t; }
+        else { db_l.push({n,t,h:[],id:Date.now()}); }
+        save(); limpiarCl(); render(); alert("Cliente guardado");
     }
-    function cancelEdit() { document.getElementById('edit-id').value=""; document.getElementById('n_cn').value=""; document.getElementById('n_ct').value=""; document.getElementById('btn-c-e').style.display="none"; document.getElementById('t-cls').innerText="+ REGISTRAR CLIENTE"; }
+    function prepararCl(id) {
+        const c=db_l.find(x=>x.id===id); document.getElementById('edit-cl-id').value=c.id; document.getElementById('c-nom').value=c.n; document.getElementById('c-tel').value=c.t;
+        document.getElementById('t-cls').innerText="✏️ EDITAR CLIENTE"; document.getElementById('btn-c-cl').style.display="block"; window.scrollTo(0,0);
+    }
+    function limpiarCl() { document.getElementById('edit-cl-id').value=""; document.getElementById('c-nom').value=""; document.getElementById('c-tel').value=""; document.getElementById('t-cls').innerText="+ REGISTRAR CLIENTE"; document.getElementById('btn-c-cl').style.display="none"; }
+    function addTinte(id) { const txt=prompt("Fórmula/Tinte:"); if(txt){ let i=db_l.findIndex(x=>x.id===id); db_l[i].h.unshift({f:new Date().toLocaleDateString(), t:txt}); save(); render(); } }
 
-    function editCl(id){ const c=cls.find(x=>x.id===id); document.getElementById('edit-id').value=c.id; document.getElementById('n_cn').value=c.n; document.getElementById('n_ct').value=c.t; document.getElementById('btn-c-e').style.display="block"; document.getElementById('t-cls').innerText="✏️ EDITANDO CLIENTE"; window.scrollTo(0,0); }
-
-    function addH(id) { const txt=prompt("Nota Técnica (Tinte/Mechas):"); if(txt){ let i=cls.findIndex(x=>x.id===id); cls[i].h.unshift({f:new Date().toLocaleDateString(), t:txt}); save(); render(); } }
-
+    // --- CAJA Y CONFIG ---
+    function rápido(t) { document.getElementById('v-mon').value = db_p[t]; }
     function vender() {
-        const m=parseFloat(document.getElementById('vm').value), b=document.getElementById('vb').value, n=document.getElementById('vn').value;
-        if(m){ vts.push({m,b,f:new Date().toLocaleDateString(), n}); save(); render(); alert("Venta Guardada"); document.getElementById('vm').value=""; document.getElementById('vn').value=""; }
+        const m=parseFloat(document.getElementById('v-mon').value), b=document.getElementById('v-barb').value, n=document.getElementById('v-nom').value;
+        if(m) { db_v.push({m,b,f:new Date().toLocaleDateString(), n}); save(); render(); alert("Cobro registrado"); document.getElementById('v-mon').value=""; document.getElementById('v-nom').value=""; }
     }
-
+    function guardarConfig() {
+        db_s.p1 = document.getElementById('p1-n').value || db_s.p1; db_s.p2 = document.getElementById('p2-n').value || db_s.p2;
+        db_p.cab = document.getElementById('pr-cab').value; db_p.dam = document.getElementById('pr-dam').value; db_p.nin = document.getElementById('pr-nin').value; db_p.pla = document.getElementById('pr-pla').value;
+        save(); render(); alert("Configuración guardada");
+    }
     function addInv() {
-        const n=document.getElementById('i_n').value, q=parseInt(document.getElementById('i_q').value), p=document.getElementById('i_p').value, c=document.getElementById('i_c').value;
-        if(n&&q){ let i=inv.findIndex(x=>x.c===c); if(i>-1){inv[i].q+=q; inv[i].p=p;} else {inv.push({n,q,p,c,id:Date.now()});} save(); render(); alert("Stock ok"); }
+        const cod=document.getElementById('i-cod').value, nom=document.getElementById('i-nom').value, can=parseInt(document.getElementById('i-can').value), pre=document.getElementById('i-pre').value;
+        if(nom && can) {
+            let i=db_i.findIndex(x=>x.cod===cod && cod!=="");
+            if(i>-1){db_i[i].can+=can; db_i[i].pre=pre;} else {db_i.push({cod,nom,can,pre,id:Date.now()});}
+            save(); render(); alert("Inventario actualizado");
+        }
     }
 
-    function listarClientes() {
-        const d=document.getElementById('listaClientes'), b=document.getElementById('bus').value.toLowerCase(); d.innerHTML="";
-        cls.filter(x=>x.n.toLowerCase().includes(b) || x.h.some(h=>h.t.toLowerCase().includes(b))).forEach(c=>{
-            let hHtml = c.h.map(h=>`<div class="hist-item"><b>${h.f}:</b> ${h.t}</div>`).join('');
-            d.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small>${hHtml}
-            <div style="display:flex; gap:5px; margin-top:10px">
-                <button class="btn-m" style="padding:8px; font-size:10px; background:var(--a); color:white" onclick="addH(${c.id})">+ TINTE</button>
-                <button class="btn-m" style="padding:8px; font-size:10px; background:var(--v); color:white" onclick="editCl(${c.id})">EDITAR</button>
-                <button class="btn-del" onclick="if(confirm('¿Borrar cliente?')){cls=cls.filter(x=>x.id!==${c.id});save();render();}">ELIMINAR</button>
-            </div></div>`;
-        });
-    }
-
-    function stats() {
-        const h=new Date().toLocaleDateString(); let b1=0, b2=0, t=0;
-        vts.forEach(v=>{ if(v.f===h){ if(v.b==='P1') b1+=v.m; else b2+=v.m; t+=v.m; } });
+    // --- RENDERIZADO DINÁMICO ---
+    function render() {
+        // Stats
+        const hoy=new Date().toLocaleDateString(); let b1=0, b2=0, t=0;
+        db_v.forEach(v=>{ if(v.f===hoy){ if(v.b==='P1' || v.b===db_s.p1) b1+=v.m; else b2+=v.m; t+=v.m; } });
         document.getElementById('sB1').innerText='$'+b1; document.getElementById('sB2').innerText='$'+b2; document.getElementById('tH').innerText='$'+t;
+        document.getElementById('nP1').innerText=db_s.p1; document.getElementById('nP2').innerText=db_s.p2;
+        
+        // Selects
+        const s=document.querySelectorAll('.staff-select'); s.forEach(x=>{ x.innerHTML=`<option value="${db_s.p1}">${db_s.p1}</option><option value="${db_s.p2}">${db_s.p2}</option>`; });
+        
+        // Calendario y Citas
+        const cal=document.getElementById('calendario'); cal.innerHTML="";
+        const d=new Date(); const ult=new Date(d.getFullYear(), d.getMonth()+1, 0).getDate();
+        for(let i=1; i<=ult; i++){
+            let f=`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(i).padStart(2,'0')}`;
+            let has=db_c.some(x=>x.f===f)?'has-c':''; let sel=f===fechaSel?'sel-d':'';
+            cal.innerHTML+=`<div class="cal-d ${has} ${sel}" onclick="fechaSel='${f}';render()">${i}</div>`;
+        }
+        const lC=document.getElementById('listaCitas'); lC.innerHTML=`<small style="color:var(--oro)">Citas para ${fechaSel}:</small>`;
+        db_c.filter(x=>x.f===fechaSel).sort((a,b)=>a.h.localeCompare(b.h)).forEach(c=>{
+            lC.innerHTML+=`<div class="item"><span class="badge">${c.b} | ${c.h} HS</span><br><b>${c.n}</b><br>
+            <button class="btn-action" style="background:var(--a); color:white" onclick="prepararCita(${c.id})">CAMBIAR</button>
+            <button class="btn-action" style="background:var(--r); color:white" onclick="if(confirm('¿Cancelar?')){db_c=db_c.filter(x=>x.id!==${c.id});save();render();}">ELIMINAR</button></div>`;
+        });
+
+        // Clientes
+        const lCl=document.getElementById('listaClientes'), bus=document.getElementById('bus').value.toLowerCase(); lCl.innerHTML="";
+        db_l.filter(x=>x.n.toLowerCase().includes(bus) || x.h.some(h=>h.t.toLowerCase().includes(bus))).forEach(c=>{
+            let hH=c.h.map(h=>`<div class="hist-box"><b>${h.f}:</b> ${h.t}</div>`).join('');
+            lCl.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small>${hH}<br>
+            <button class="btn-action" style="background:var(--p); color:white" onclick="addTinte(${c.id})">+ TINTE</button>
+            <button class="btn-action" style="background:var(--v); color:black" onclick="prepararCl(${c.id})">EDITAR</button>
+            <button class="btn-action" style="background:var(--r); color:white" onclick="if(confirm('¿Borrar cliente?')){db_l=db_l.filter(x=>x.id!==${c.id});save();render();}">X</button></div>`;
+        });
+
+        // Inventario
+        const lI=document.getElementById('listaInv'); lI.innerHTML="";
+        db_i.forEach(x=>{ lI.innerHTML+=`<div class="item" style="border-left-color:var(--a)"><b>${x.nom}</b> (${x.can} pzs) - $${x.pre}<br><small>CÓD: ${x.cod}</small><button class="btn-del" onclick="db_i=db_i.filter(i=>i.id!==${x.id});save();render()">X</button></div>`; });
+
+        // Config
+        document.getElementById('p1-n').value=db_s.p1; document.getElementById('p2-n').value=db_s.p2;
+        document.getElementById('pr-cab').value=db_p.cab; document.getElementById('pr-dam').value=db_p.dam; document.getElementById('pr-nin').value=db_p.nin; document.getElementById('pr-pla').value=db_p.pla;
     }
-    function listarInv() { const d=document.getElementById('listaInv'); d.innerHTML=""; inv.forEach(x=>{ d.innerHTML+=`<div class="item"><b>${x.n}</b> (${x.q} pzs) - $${x.p} <button class="btn-del" onclick="inv=inv.filter(i=>i.id!==${x.id});save();render()">X</button></div>`; }); }
-    function save(){ localStorage.setItem('ms_v', JSON.stringify(vts)); localStorage.setItem('ms_l', JSON.stringify(cls)); localStorage.setItem('ms_i', JSON.stringify(inv)); }
-    function render(){ stats(); listarClientes(); listarInv(); }
-    function exportar(){ const b=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="manuel_salon_backup.json"; a.click(); }
-    render();
-</script>
-</body>
-</html>
+
+    function exportar(){ const b=ne
