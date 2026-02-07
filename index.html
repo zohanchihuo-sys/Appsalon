@@ -3,200 +3,172 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Manuel Salón - Scanner Pro</title>
+    <title>Manuel Salón - Ultimate Edition</title>
     <script src="https://unpkg.com/html5-qrcode"></script>
     <style>
-        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; }
+        :root { --oro: #d4af37; --bg: #0a0a0a; --card: #151515; --v: #2ecc71; --r: #e74c3c; --a: #3498db; --p: #9b59b6; }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); color: #eee; margin: 0; overflow-x: hidden; }
         header { background: #000; padding: 15px; display: flex; align-items: center; border-bottom: 2px solid var(--oro); position: sticky; top: 0; z-index: 100; }
         .menu-icon { font-size: 26px; color: var(--oro); cursor: pointer; margin-right: 15px; }
         .brand { color: var(--oro); font-weight: bold; letter-spacing: 2px; text-transform: uppercase; }
         .nav-drawer { position: fixed; top: 0; left: -260px; width: 260px; height: 100%; background: #111; z-index: 200; transition: 0.3s; border-right: 1px solid var(--oro); }
         .nav-drawer.active { left: 0; }
-        .nav-item { padding: 18px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; text-decoration: none; cursor: pointer; }
+        .nav-item { padding: 15px 25px; border-bottom: 1px solid #222; color: #ccc; display: block; text-decoration: none; cursor: pointer; font-size: 14px; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); display: none; z-index: 150; }
         .overlay.active { display: block; }
-        .content { padding: 20px; display: none; }
+        .content { padding: 15px; display: none; }
         .content.active { display: block; }
-        .card { background: var(--card); border-radius: 12px; padding: 20px; margin-bottom: 15px; border: 1px solid #252525; }
-        input, select { width: 100%; padding: 14px; margin: 8px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
-        .btn-m { width: 100%; padding: 16px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; margin-top: 5px; }
-        .btn-scan { background: #444; color: white; border: 1px solid var(--oro); padding: 10px; margin-bottom: 10px; border-radius: 8px; width: 100%; font-weight: bold; display: flex; align-items: center; justify-content: center; gap: 10px; }
-        #reader { width: 100%; border-radius: 12px; overflow: hidden; margin-bottom: 15px; display: none; border: 2px solid var(--oro); }
-        .item { background: #1a1a1a; padding: 15px; border-radius: 12px; margin-bottom: 10px; border-left: 4px solid var(--oro); position: relative; }
-        .badge { background: var(--a); color: white; padding: 2px 8px; border-radius: 4px; font-size: 10px; }
+        .card { background: var(--card); border-radius: 12px; padding: 15px; margin-bottom: 15px; border: 1px solid #252525; }
+        input, select, textarea { width: 100%; padding: 12px; margin: 5px 0; border-radius: 8px; border: 1px solid #333; background: #000; color: white; font-size: 16px; box-sizing: border-box; }
+        .btn-m { width: 100%; padding: 15px; border-radius: 10px; border: none; font-weight: bold; background: var(--oro); color: black; text-transform: uppercase; cursor: pointer; }
+        .btn-scan { background: #333; color: var(--oro); border: 1px solid var(--oro); padding: 10px; border-radius: 8px; width: 100%; font-weight: bold; margin-bottom: 10px; }
+        #reader { width: 100%; border-radius: 12px; overflow: hidden; display: none; border: 2px solid var(--oro); margin-bottom: 10px; }
+        .item { background: #1a1a1a; padding: 12px; border-radius: 10px; margin-bottom: 10px; border-left: 4px solid var(--oro); position: relative; }
+        .hist-item { background: #000; padding: 8px; border-radius: 6px; margin-top: 5px; font-size: 12px; border: 1px solid #333; }
+        .btn-del { background: var(--r); color: white; border: none; padding: 5px 10px; border-radius: 6px; font-size: 10px; margin-top: 5px; }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
     </style>
 </head>
 <body>
 
     <header>
         <div class="menu-icon" onclick="toggleMenu()">☰</div>
-        <div class="brand">MANUEL SALÓN SCAN</div>
+        <div class="brand">MANUEL SALÓN PRO</div>
     </header>
 
     <div class="overlay" id="overlay" onclick="toggleMenu()"></div>
 
     <nav class="nav-drawer" id="drawer">
-        <div style="padding:20px; text-align:center; color:var(--oro)"><b>SISTEMA LÁSER</b></div>
-        <div class="nav-item" onclick="showSec('sec-dash')">🏠 CAJA</div>
-        <div class="nav-item" onclick="showSec('sec-ventas')">💰 VENTA / ESCÁNER</div>
-        <div class="nav-item" onclick="showSec('sec-cls')">👥 CLIENTES</div>
-        <div class="nav-item" onclick="showSec('sec-inv')">📦 STOCK / ENTRADAS</div>
+        <div style="padding:20px; text-align:center; color:var(--oro); background:#000"><b>MANUEL SALÓN</b></div>
+        <div class="nav-item" onclick="showSec('sec-dash')">🏠 INICIO / CAJA</div>
+        <div class="nav-item" onclick="showSec('sec-ventas')">💰 COBRAR / ESCÁNER</div>
+        <div class="nav-item" onclick="showSec('sec-cls')">👥 CLIENTES / TINTES</div>
+        <div class="nav-item" onclick="showSec('sec-inv')">📦 INVENTARIO</div>
+        <div class="nav-item" onclick="showSec('sec-ajustes')">⚙️ AJUSTES PRECIOS</div>
+        <div class="nav-item" onclick="exportar()" style="color:var(--a)">💾 RESPALDO</div>
     </nav>
 
-    <div id="scanner-container" style="padding: 0 20px; margin-top: 10px;">
-        <div id="reader"></div>
-        <button id="btn-stop" class="btn-m" style="display:none; background:var(--r); color:white; margin-bottom: 15px;" onclick="stopScan()">CERRAR CÁMARA</button>
-    </div>
+    <div id="reader-cont" style="padding: 0 15px;"><div id="reader"></div><button id="btn-stop" class="btn-m" style="display:none; background:var(--r); color:white; margin-bottom:10px;" onclick="stopScan()">CERRAR CÁMARA</button></div>
 
     <div id="sec-dash" class="content active">
         <div class="card" style="text-align:center">
-            <h1 id="totalHoy" style="color:var(--v);">$0</h1>
-            <small>INGRESOS HOY</small>
+            <small>INGRESOS HOY</small><h1 id="tH" style="color:var(--v); margin:5px 0">$0</h1>
+            <div class="stats-grid">
+                <div class="card" style="margin:0"><small>Peluquero 1</small><br><b id="sB1">$0</b></div>
+                <div class="card" style="margin:0"><small>Peluquero 2</small><br><b id="sB2">$0</b></div>
+            </div>
         </div>
     </div>
 
     <div id="sec-ventas" class="content">
         <div class="card">
-            <h2>COBRAR PRODUCTO</h2>
-            <button class="btn-scan" onclick="startScan('venta')">📷 ESCANEAR CÓDIGO</button>
-            <input type="text" id="v_code" placeholder="Código de barras">
-            <input type="text" id="v_prod" placeholder="Producto detectado" readonly>
-            <input type="number" id="v_monto" placeholder="Precio $">
-            <button class="btn-m" onclick="venderProd()">FINALIZAR COBRO</button>
+            <h2>COBRAR</h2>
+            <select id="vb"><option value="P1">Peluquero 1</option><option value="P2">Peluquero 2</option></select>
+            <button class="btn-scan" onclick="startScan('venta')">📷 ESCANEAR PRODUCTO</button>
+            <input type="text" id="vn" placeholder="Nombre Cliente">
+            <input type="number" id="vm" placeholder="Monto $">
+            <button class="btn-m" onclick="vender()">FINALIZAR VENTA</button>
         </div>
     </div>
 
     <div id="sec-cls" class="content">
         <div class="card">
-            <h2>GESTIÓN CLIENTES</h2>
+            <h2 id="t-cls">+ AGREGAR CLIENTE</h2>
+            <input type="hidden" id="edit-id">
             <input type="text" id="n_cn" placeholder="Nombre">
             <input type="tel" id="n_ct" placeholder="WhatsApp">
-            <button class="btn-m" onclick="guardarCliente()">GUARDAR</button>
+            <button id="btn-g-c" class="btn-m" onclick="guardarCliente()">GUARDAR CLIENTE</button>
+            <button id="btn-c-e" class="btn-m" style="background:#444; color:white; display:none; margin-top:5px" onclick="cancelEdit()">CANCELAR</button>
         </div>
-        <div id="listaClientes"></div>
+        <input type="text" id="bus" placeholder="🔍 Buscar cliente o tinte..." onkeyup="listarClientes()">
+        <div id="listaClientes" style="margin-top:15px"></div>
     </div>
 
     <div id="sec-inv" class="content">
         <div class="card">
-            <h2>ENTRADA DE MERCANCÍA</h2>
-            <button class="btn-scan" onclick="startScan('stock')">📷 ESCANEAR PARA ALTA</button>
-            <input type="text" id="i_code" placeholder="Código de barras">
-            <input type="text" id="i_n" placeholder="Nombre del Producto">
+            <h2>STOCK</h2>
+            <button class="btn-scan" onclick="startScan('stock')">📷 ESCANEAR CÓDIGO</button>
+            <input type="text" id="i_c" placeholder="Código de barras">
+            <input type="text" id="i_n" placeholder="Producto">
             <input type="number" id="i_q" placeholder="Cantidad">
             <input type="number" id="i_p" placeholder="Precio Venta $">
-            <button class="btn-m" onclick="addInv()" style="background:var(--v); color:white;">REGISTRAR EN STOCK</button>
+            <button class="btn-m" onclick="addInv()">REGISTRAR STOCK</button>
         </div>
         <div id="listaInv"></div>
     </div>
 
+    <div id="sec-ajustes" class="content">
+        <div class="card">
+            <h2>PRECIOS RÁPIDOS</h2>
+            <small>Corte:</small><input type="number" id="p_c">
+            <small>Barba:</small><input type="number" id="p_b">
+            <button class="btn-m" onclick="guardarPrecios()">ACTUALIZAR PRECIOS</button>
+        </div>
+    </div>
+
 <script>
-    let vts = JSON.parse(localStorage.getItem('ms_v')) || [];
-    let cls = JSON.parse(localStorage.getItem('ms_l')) || [];
-    let inv = JSON.parse(localStorage.getItem('ms_i')) || [];
+    let vts = JSON.parse(localStorage.getItem('m_v')) || [];
+    let cls = JSON.parse(localStorage.getItem('m_l')) || [];
+    let inv = JSON.parse(localStorage.getItem('m_i')) || [];
+    let pre = JSON.parse(localStorage.getItem('m_p')) || {c:200, b:100};
     let html5QrCode;
 
-    function toggleMenu() {
-        document.getElementById('drawer').classList.toggle('active');
-        document.getElementById('overlay').classList.toggle('active');
-    }
+    function toggleMenu() { document.getElementById('drawer').classList.toggle('active'); document.getElementById('overlay').classList.toggle('active'); }
+    function showSec(id) { document.querySelectorAll('.content').forEach(s => s.classList.remove('active')); document.getElementById(id).classList.add('active'); toggleMenu(); stopScan(); render(); }
 
-    function showSec(id) {
-        document.querySelectorAll('.content').forEach(s => s.classList.remove('active'));
-        document.getElementById(id).classList.add('active');
-        toggleMenu();
-        stopScan();
-        render();
-    }
-
-    // --- LÓGICA DEL ESCÁNER ---
-    function startScan(modo) {
-        document.getElementById('reader').style.display = 'block';
-        document.getElementById('btn-stop').style.display = 'block';
+    function startScan(m) {
+        document.getElementById('reader').style.display='block'; document.getElementById('btn-stop').style.display='block';
         html5QrCode = new Html5Qrcode("reader");
-        html5QrCode.start(
-            { facingMode: "environment" }, 
-            { fps: 10, qrbox: { width: 250, height: 150 } },
-            (decodedText) => {
-                if(modo === 'stock') {
-                    document.getElementById('i_code').value = decodedText;
-                    // Buscar si ya existe para autocompletar
-                    let p = inv.find(x => x.code === decodedText);
-                    if(p) { document.getElementById('i_n').value = p.n; document.getElementById('i_p').value = p.p; }
-                } else {
-                    document.getElementById('v_code').value = decodedText;
-                    let p = inv.find(x => x.code === decodedText);
-                    if(p) { 
-                        document.getElementById('v_prod').value = p.n; 
-                        document.getElementById('v_monto').value = p.p; 
-                    } else { alert("Producto no encontrado en inventario"); }
-                }
-                stopScan();
-            }
-        ).catch(err => alert("Error de cámara: " + err));
+        html5QrCode.start({facingMode:"environment"}, {fps:10, qrbox:250}, (txt) => {
+            if(m==='stock') { document.getElementById('i_c').value=txt; let p=inv.find(x=>x.c===txt); if(p){document.getElementById('i_n').value=p.n; document.getElementById('i_p').value=p.p;} }
+            else { let p=inv.find(x=>x.c===txt); if(p){document.getElementById('vn').value=p.n; document.getElementById('vm').value=p.p;} else alert("No en stock"); }
+            stopScan();
+        }).catch(e=>alert("Cámara error"));
     }
-
-    function stopScan() {
-        if(html5QrCode) {
-            html5QrCode.stop().then(() => {
-                document.getElementById('reader').style.display = 'none';
-                document.getElementById('btn-stop').style.display = 'none';
-            });
-        }
-    }
-
-    // --- ACCIONES ---
-    function addInv() {
-        const n = document.getElementById('i_n').value, q = parseInt(document.getElementById('i_q').value), 
-              p = document.getElementById('i_p').value, code = document.getElementById('i_code').value;
-        if(n && q && code) {
-            let idx = inv.findIndex(x => x.code === code);
-            if(idx > -1) { inv[idx].q += q; inv[idx].p = p; } 
-            else { inv.push({n, q, p, code, id:Date.now()}); }
-            save(); render(); alert("Stock Actualizado");
-            document.getElementById('i_n').value=""; document.getElementById('i_q').value=""; document.getElementById('i_code').value="";
-        }
-    }
-
-    function venderProd() {
-        const code = document.getElementById('v_code').value, m = parseFloat(document.getElementById('v_monto').value);
-        let idx = inv.findIndex(x => x.code === code);
-        if(idx > -1 && inv[idx].q > 0) {
-            inv[idx].q--;
-            vts.push({m, f:new Date().toLocaleDateString(), prod: inv[idx].n});
-            save(); render(); alert("Venta realizada");
-            document.getElementById('v_code').value=""; document.getElementById('v_prod').value=""; document.getElementById('v_monto').value="";
-        } else { alert("Sin stock o producto no existe"); }
-    }
+    function stopScan() { if(html5QrCode){ html5QrCode.stop().then(()=>{document.getElementById('reader').style.display='none'; document.getElementById('btn-stop').style.display='none';}); } }
 
     function guardarCliente() {
-        const n = document.getElementById('n_cn').value, t = document.getElementById('n_ct').value;
-        if(n && t) { cls.push({n, t, id:Date.now()}); save(); render(); }
+        const n=document.getElementById('n_cn').value, t=document.getElementById('n_ct').value, id=document.getElementById('edit-id').value;
+        if(id) { let i=cls.findIndex(x=>x.id==id); cls[i].n=n; cls[i].t=t; }
+        else { cls.push({n, t, h:[], id:Date.now()}); }
+        cancelEdit(); save(); render();
+    }
+    function cancelEdit() { document.getElementById('edit-id').value=""; document.getElementById('n_cn').value=""; document.getElementById('n_ct').value=""; document.getElementById('btn-c-e').style.display="none"; document.getElementById('t-cls').innerText="+ AGREGAR CLIENTE"; }
+
+    function addH(id) { const txt=prompt("Fórmula/Tinte:"); if(txt){ let i=cls.findIndex(x=>x.id===id); cls[i].h.unshift({f:new Date().toLocaleDateString(), t:txt}); save(); render(); } }
+
+    function vender() {
+        const m=parseFloat(document.getElementById('vm').value), b=document.getElementById('vb').value, n=document.getElementById('vn').value;
+        if(m){ vts.push({m,b,f:new Date().toLocaleDateString(), n}); save(); render(); alert("Venta OK"); }
     }
 
-    function listarInv() {
-        const div = document.getElementById('listaInv'); div.innerHTML = "";
-        inv.forEach(x => {
-            div.innerHTML += `<div class="item">
-                <b>${x.n}</b> <span class="badge">COD: ${x.code}</span><br>
-                Stock: ${x.q} | Precio: $${x.p}
-            </div>`;
+    function addInv() {
+        const n=document.getElementById('i_n').value, q=parseInt(document.getElementById('i_q').value), p=document.getElementById('i_p').value, c=document.getElementById('i_c').value;
+        if(n&&q){ let i=inv.findIndex(x=>x.c===c); if(i>-1){inv[i].q+=q; inv[i].p=p;} else {inv.push({n,q,p,c,id:Date.now()});} save(); render(); }
+    }
+
+    function listarClientes() {
+        const d=document.getElementById('listaClientes'), b=document.getElementById('bus').value.toLowerCase(); d.innerHTML="";
+        cls.filter(x=>x.n.toLowerCase().includes(b) || x.h.some(h=>h.t.toLowerCase().includes(b))).forEach(c=>{
+            let hHtml = c.h.map(h=>`<div class="hist-item"><b>${h.f}:</b> ${h.t}</div>`).join('');
+            d.innerHTML+=`<div class="item"><b>${c.n}</b><br><small>${c.t}</small>${hHtml}
+            <button class="btn-m" style="padding:5px; font-size:10px; margin-top:5px; background:var(--a); color:white" onclick="addH(${c.id})">+ TINTE</button>
+            <button class="btn-m" style="padding:5px; font-size:10px; background:var(--v); color:white" onclick="editCl(${c.id})">EDITAR</button>
+            <button class="btn-del" onclick="cls=cls.filter(x=>x.id!==${c.id});save();render()">BORRAR</button></div>`;
         });
     }
+    function editCl(id){ const c=cls.find(x=>x.id===id); document.getElementById('edit-id').value=c.id; document.getElementById('n_cn').value=c.n; document.getElementById('n_ct').value=c.t; document.getElementById('btn-c-e').style.display="block"; document.getElementById('t-cls').innerText="✏️ EDITAR CLIENTE"; window.scrollTo(0,0); }
 
     function stats() {
-        const hoy = new Date().toLocaleDateString(); let t = 0;
-        vts.forEach(v => { if(v.f === hoy) t += v.m; });
-        document.getElementById('totalHoy').innerText = '$' + t;
+        const h=new Date().toLocaleDateString(); let b1=0, b2=0, t=0;
+        vts.forEach(v=>{ if(v.f===h){ if(v.b==='P1') b1+=v.m; else b2+=v.m; t+=v.m; } });
+        document.getElementById('sB1').innerText='$'+b1; document.getElementById('sB2').innerText='$'+b2; document.getElementById('tH').innerText='$'+t;
     }
-
-    function save() {
-        localStorage.setItem('ms_v', JSON.stringify(vts));
-        localStorage.setItem('ms_l', JSON.stringify(cls));
-        localStorage.setItem('ms_i', JSON.stringify(inv));
-    }
-
-    function render() { stats(); listarInv(); }
+    function listarInv() { const d=document.getElementById('listaInv'); d.innerHTML=""; inv.forEach(x=>{ d.innerHTML+=`<div class="item"><b>${x.n}</b> (${x.q} pzs) - $${x.p} <button class="btn-del" onclick="inv=inv.filter(i=>i.id!==${x.id});save();render()">X</button></div>`; }); }
+    function save(){ localStorage.setItem('m_v', JSON.stringify(vts)); localStorage.setItem('m_l', JSON.stringify(cls)); localStorage.setItem('m_i', JSON.stringify(inv)); localStorage.setItem('m_p', JSON.stringify(pre)); }
+    function render(){ stats(); listarClientes(); listarInv(); document.getElementById('p_c').value=pre.c; document.getElementById('p_b').value=pre.b; }
+    function guardarPrecios(){ pre.c=document.getElementById('p_c').value; pre.b=document.getElementById('p_b').value; save(); alert("Precios OK"); }
+    function exportar(){ const b=new Blob([JSON.stringify(localStorage)],{type:"application/json"}); const a=document.createElement("a"); a.href=URL.createObjectURL(b); a.download="manuel_salon.json"; a.click(); }
     render();
 </script>
 </body>
